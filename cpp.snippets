@@ -1,0 +1,98 @@
+## Preprocessor
+# #include <...>
+snippet incv
+#include <opencv2/${1:opencv}.hpp>
+
+using namespace cv;
+endsnippet
+
+
+
+
+
+## Image process snippet 
+snippet ip 
+/* 
+ *
+ */
+void ${1:name}( InputArray _${2:input}, InputOutputArray _${3:inout}, double ${4:param})
+{
+    CV_Assert( _$2.type() == CV_8UC1 && _$3.type() == CV_32FC1 );
+    CV_Assert( _$2.sameSize(_$3));
+
+    Mat $2 = _$2.getMat(), $3= _$3.getMat();
+    Size size = $2.size();
+
+    if( $2.isContinuous() && $3.isContinuous() )
+    {
+        size.width *= size.height;
+        size.height = 1;
+    }
+
+    for( int y = 0; y < size.height; y++ )
+    {
+        const uchar* $2Data = $2.ptr<uchar>(y);
+        float* $3Data = $3.ptr<float>(y);
+
+        for( int x = 0; x < size.width; x++ )
+        {
+            // TODO
+			${5}
+        }
+    }
+}
+endsnippet
+
+
+## Open Camera
+snippet camera 
+int camera_id = 0;
+VideoCapture capture(camera_id);
+if(!capture.isOpened()){
+    cout << "Can not open camera" << endl;
+    return -1;
+}
+double rate= capture.get(CV_CAP_PROP_FPS);
+Mat frame; 
+namedWindow("Camera");
+
+int delay= 1000/rate;
+while (true) {
+    if (!capture.read(frame))
+        break;
+
+    // TODO
+	${1}
+
+    imshow("Camera",frame);
+    char key = cv::waitKey(delay);
+    if (key == 'q')
+        break;
+}
+capture.release();
+destroyAllWindows();
+endsnippet
+
+
+
+# Mouse
+snippet mouse
+void MouseCallback(int mouseEvent,int x,int y,int flags,void* params) 
+{ 
+	${2:int}* ${3:p} = ($2*)params;
+	switch(mouseEvent) 
+	{ 
+	case CV_EVENT_LBUTTONDOWN: 
+		${3}
+		break; 
+	case CV_EVENT_MOUSEMOVE: 
+		break; 
+	case CV_EVENT_LBUTTONUP: 
+		break; 
+	default:
+		break;
+	}
+	return; 
+} 
+// setMouseCallback("window", MouseCallback, &params);
+endsnippet
