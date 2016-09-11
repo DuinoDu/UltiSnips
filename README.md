@@ -2,7 +2,7 @@
 Code snippets for opencv.
 
 # How to use
-1. Install vim and [UltiSnips](https://github.com/sirver/UltiSnips)
+1. Install vim and [UltiSnips](https://github.com/sirver/UltiSnips). You can refer to this [blog](http://blog.csdn.net/duinodu/article/details/52503218)
 2. 
 ```
 cd ~/.vim
