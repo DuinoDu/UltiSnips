@@ -1,0 +1,29 @@
+snippet tool
+
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
+'''
+###########
+${1:Tool Description}
+
+Usage:
+python ${2:filename}.py src.txt
+
+'''
+
+def main(argv):
+    assert(len(argv) == 2)
+    
+    # load all index
+    with open(argv[1], 'r') as fid:
+        indexes = [x.split('\n')[0] for x in fid.readlines()]
+
+	# ${3:add your code}
+
+if __name__ == "__main__":
+    print(__doc__)
+    import sys
+    main(sys.argv)
+
+endsnippet
