@@ -6,8 +6,18 @@ snippet incv
 using namespace cv;
 endsnippet
 
+## show fps
+snippet fps
+void showFPS(Mat& img)
+{
+    static clock_t t0 = clock();
+    float time_cost = (float)(clock() - t0)/CLOCKS_PER_SEC; // sec
+    t0 = clock();
 
-
+    float fps = 1/time_cost;
+    putText(img, "fps:" + to_string(fps), Point(10,50), 1, 1, Scalar(0,0,255));
+}
+endsnippet
 
 
 ## Image process snippet 
