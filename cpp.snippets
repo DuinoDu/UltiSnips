@@ -1,5 +1,26 @@
+# List:
+# incv, fps, ip, camera, mouse 
+#
+
+# readfile
+snippet readfile
+//#include <fstream>
+//#include <string>
+//using namespace std;
+ifstream file;
+string line;
+file.open("${1:filepath}");
+if (file.is_open()){
+	while (!file.eof()){ 
+		file >> line;
+		cout << line << endl;
+		${2:TODO}
+	}
+}
+endsnippet
+
+
 ## Preprocessor
-# #include <...>
 snippet incv
 #include <opencv2/${1:opencv}.hpp>
 
