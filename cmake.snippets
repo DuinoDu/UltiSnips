@@ -1,0 +1,17 @@
+snippet init2
+cmake_minimum_required(VERSION 2.8)
+project(${1:ProjectName})
+
+SET(CMAKE_CXX_COMPILER "g++-4.8")
+SET(CMAKE_CXX_FLAGS "-std=c++11 -O2 -Wall -Werror")
+
+# eg: OpenCV
+find_package(${3:library})
+include_directories(${$3_INCLUDE_DIRS})
+
+#add_subdirectory(${0:src})
+
+add_executable($1 test.cpp $2.cpp)
+
+target_link_libraries($1 ${$3_LIBRARIES})
+endsnippet
