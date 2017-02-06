@@ -5,20 +5,25 @@ snippet tool
 '''
 ###########
 Usage:
-python ${2}.py args
+python ${1:yourFunction}.py args
 
 '''
 
-def ${1:yourFunction}(argv):
+def ${1}(argv):
 	${2:pass}
 
-def main(argv):
+def main():
     import sys
 	if len(sys.argv) != 2:
 		print(__doc__)
 		return
-    yourFunction(sys.argv)
+    ${1}(sys.argv)
 
 if __name__ == "__main__":
 	main()
+endsnippet
+
+snippet dir
+if not os.path.exists(${1:dirname}):
+    os.mkdirs(${1})
 endsnippet
