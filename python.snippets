@@ -9,7 +9,7 @@ python ${1:yourFunction}.py args
 
 '''
 
-def ${1}(argv):
+def $1(argv):
 	${2:pass}
 
 def main():
@@ -17,7 +17,7 @@ def main():
 	if len(sys.argv) != 2:
 		print(__doc__)
 		return
-    ${1}(sys.argv)
+    $1(sys.argv)
 
 if __name__ == "__main__":
 	main()
@@ -25,5 +25,5 @@ endsnippet
 
 snippet dir
 if not os.path.exists(${1:dirname}):
-    os.makedirs(${1})
+    os.makedirs($1)
 endsnippet
