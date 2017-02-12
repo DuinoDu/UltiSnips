@@ -3,10 +3,7 @@ snippet tool
 # -*- coding: utf-8 -*-
 
 '''
-###########
-Usage:
 python ${1:yourFunction}.py ${2:args}
-
 '''
 
 def $1(argv):
@@ -23,7 +20,7 @@ if __name__ == "__main__":
 	main()
 endsnippet
 
-snippet dir
+snippet isdir
 if not os.path.exists(${1:dirname}):
     os.makedirs($1)
 endsnippet
