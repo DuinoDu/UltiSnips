@@ -24,3 +24,9 @@ snippet isdir
 if not os.path.exists(${1:dirname}):
     os.makedirs($1)
 endsnippet
+
+snippet sh
+(status, output) = commands.getstatusoutput('$1')
+output = output.split('\n')
+endsnippet
+
