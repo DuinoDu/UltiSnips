@@ -5,6 +5,7 @@ snippet tool
 '''
 python ${1:yourFunction}.py ${2:args}
 '''
+import os, sys
 
 def $1(argv):
 	${3:pass}
@@ -31,9 +32,9 @@ output = output.split('\n')
 endsnippet
 
 snippet printi
-        sys.stdout.flush()
-        sys.stdout.write('writing {}/{}\r'.format(i, len(files)))
-        i += 1 # set i = 0 before looping
-    print '\nFinish!'
+    sys.stdout.flush()
+    sys.stdout.write('writing {}/{}\r'.format(i, len(files)))
+    i += 1 # set i = 0 before looping
+print '\nFinish!'
 endsnippet
 
