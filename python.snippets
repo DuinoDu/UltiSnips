@@ -38,3 +38,14 @@ snippet printi
 print '\nFinish!'
 endsnippet
 
+
+snippet camera
+cap = cv2.VideoCapture(0)
+while True:
+    ok, f = cap.read()
+    if ok:    
+        cv2.imshow("image", f)
+    if cv2.waitKey(20) == 27:
+        break
+cv2.destroyAllWindows()
+endsnippet
