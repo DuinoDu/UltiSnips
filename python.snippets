@@ -49,3 +49,18 @@ while True:
         break
 cv2.destroyAllWindows()
 endsnippet
+
+
+# mxnet
+snippet conv
+conv${1:1} = mx.symbol.Convolution(
+    data=${2}, num_filter=${3:96}, kernel=(${4:7}, $4), pad=(${5:3},$5), stride=(${6:2}, $6))
+relu$1 = mx.symbol.Activation(data=conv$1, act_type="relu")
+endsnippet
+snippet pool
+pool${1:1} = mx.symbol.Pooling(data=${2}, pool_type="max", kernel=(${3:3}, $3), stride=(${4:2},$4))
+endsnippet
+snippet lrn
+lrn${1:1} = mx.symbol.LRN(data=${2}, nsize=3, alpha=0.0005, beta=0.75, knorm=1)
+endsnippet
+
