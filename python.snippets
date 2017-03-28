@@ -38,6 +38,11 @@ snippet printi
 print '\nFinish!'
 endsnippet
 
+snippet prop
+@property
+def ${1:name}(self):
+    return self._$1
+endsnippet
 
 snippet camera
 cap = cv2.VideoCapture(0)
@@ -62,5 +67,98 @@ pool${1:1} = mx.symbol.Pooling(data=${2}, pool_type="max", kernel=(${3:3}, $3), 
 endsnippet
 snippet lrn
 lrn${1:1} = mx.symbol.LRN(data=${2}, nsize=3, alpha=0.0005, beta=0.75, knorm=1)
+endsnippet
+
+# tensorflow
+snippet place
+tf.placeholder(tf.float32, [${1}])
+endsnippet
+snippet var
+tf.Variable(${1})
+endsnippet
+snippet conv
+${1} = tf.nn.conv2d(x, W, strides=[1, ${2:stride}, $2, 1], padding='SAME')
+endsnippet
+snippet pool
+${1} = tf.nn.max_pool(x, ksize=[1, ${2:size}, $2, 1], strides=[1,$2, $2, 1], padding='SAME')
+endsnippet
+snippet bias
+tf.nn.bias_add(${1})
+endsnippet
+snippet relu
+tf.nn.relu(${1})
+endsnippet
+snippet drop
+tf.nn.dropout(${1}, dropout)
+endsnippet
+snippet cross
+tf.nn.softmax_cross_entropy_with_logits(${1:model_y}, ${2:y})
+endsnippet
+snippet add
+tf.add(${1})
+endsnippet
+snippet mul
+tf.matmul(${1})
+endsnippet
+snippet rand
+tf.random_normal([${1:h}, ${2:w}, ${3:in}, ${4:out}])
+endsnippet
+snippet mean
+tf.reduce_mean(${1})
+endsnippet
+snippet cast
+tf.cast(${1}, ${2:tf.float32})
+endsnippet
+snippet equal
+tf.equal(${1})
+endsnippet
+snippet argmax
+tf.argmax(${1}, ${2:dimension})
+endsnippet
+
+snippet grad
+tf.train.GradientDescentOptimizer(learning_rate=${1:learning_rate}).minimize(${2:cost_op})
+endsnippet
+snippet adam
+tf.train.AdamOptimizer(learning_rate=${1:learning_rate}).minimize(${2:cost_op})
+endsnippet
+snippet train
+
+endsnippet
+snippet runtrain
+sess.run(train_op, feed_dict = {${1:x}:${2}, ${3:y}:${4}})
+endsnippet
+snippet runcost
+sess.run(cost_op, feed_dict = {${1:x}:${2}, ${3:y}:${4}})
+endsnippet
+snippet runacc
+sess.run(accuracy_op, feed_dict = {${1:x}:${2}, ${3:y}:${4}})
+endsnippet
+
+
+# machine learning
+snippet ml
+import numpy as np
+import tensorflow as tf
+from sklearn.utils import shuffle
+
+# parameters
+learning_rate = 0.05
+epoches = 1000
+print_period = 10
+print_en = True
+
+# data (dsX, dsY)
+
+# data-preprocess
+
+# model
+
+# cost
+
+# optimizer
+
+# train
+
 endsnippet
 
