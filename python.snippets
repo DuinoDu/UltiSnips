@@ -27,7 +27,7 @@ if not os.path.exists(${1:dirname}):
 endsnippet
 
 snippet dump
-cPickle.dump(${1:var}‘, '${2:file}')
+cPickle.dump(${1:var}, '${2:file}')
 endsnippet
 snippet load
 ${2:var} = cPickle.load('${1:file}')
