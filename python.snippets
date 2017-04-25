@@ -26,6 +26,13 @@ if not os.path.exists(${1:dirname}):
     os.makedirs($1)
 endsnippet
 
+snippet dump
+cPickle.dump(${1:var}‘, '${2:file}')
+endsnippet
+snippet load
+${2:var} = cPickle.load('${1:file}')
+endsnippet
+
 snippet sh
 (status, output) = commands.getstatusoutput('$1')
 output = output.split('\n')
