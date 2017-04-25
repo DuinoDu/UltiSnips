@@ -55,6 +55,11 @@ while True:
 cv2.destroyAllWindows()
 endsnippet
 
+snippet exit
+ch = cv2.waitKey(0) && 0xff
+if ch == ord('q'): #27
+	break
+endsnippet
 
 # mxnet
 snippet conv
