@@ -27,10 +27,12 @@ if not os.path.exists(${1:dirname}):
 endsnippet
 
 snippet dump
-cPickle.dump(${1:var}, '${2:file}')
+with open('${2:file}', 'w') as fid:
+	cPickle.dump(${1:var}, fid)
 endsnippet
 snippet load
-${2:var} = cPickle.load('${1:file}')
+with open('${1:file}', 'r') as fid:
+	${2:var} = cPickle.load(fid)
 endsnippet
 
 snippet sh
@@ -62,10 +64,14 @@ while True:
 cv2.destroyAllWindows()
 endsnippet
 
-snippet exit
-ch = cv2.waitKey(0) && 0xff
-if ch == ord('q'): #27
+snippet esc
+ch = cv2.waitKey(0) & 0xff
+if ch == 27: #ord('q')
 	break
+endsnippet
+
+snippet cv2rect
+cv2.rectangle(${1:img}, (${2:x1}, ${3:y1}), (${4:x2}, ${5:y2}), (0, 255, 0), 2)
 endsnippet
 
 # mxnet
