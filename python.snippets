@@ -192,7 +192,7 @@ net = fasterRCNN.get_network(basenet_name, n_classes, 'train')
 
 
 # cost
-loss, cross_entropy, loss_box, rpn_cross_entropy, rpn_loss_box = loss.build_loss()
+loss, cross_entropy, loss_box, rpn_cross_entropy, rpn_loss_box = loss.build_loss(net)
 
 
 # optimizer
@@ -200,7 +200,7 @@ if cfg.TRAIN.SOLVER == 'Adam':
     opt = tf.train.AdamOptimizer(cfg.TRAIN.lr)
 elif cfg.TRAIN.SOLVER == 'RMS':
     opt = tf.train.RMSPropOptimizer(cfg.TRAIN.lr)
-elif cfg.TRAIN.solver = 'MOM':
+elif cfg.TRAIN.solver == 'MOM':
     lr = tf.Variable(cfg.TRAIN.lr, trainable=False)
     opt = tf.train.MomentumOptimizer(cfg.TRAIN.lr, cfg.TRAIN.momentum)
 else:
