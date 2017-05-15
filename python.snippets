@@ -320,3 +320,10 @@ print_en = True
 # train
 
 endsnippet
+
+snippet tic
+t1 = time.time()
+${1:add your function}
+t2 = time.time()    
+print "${2:msg to display}: {}".format(t2-t1)
+endsnippet
