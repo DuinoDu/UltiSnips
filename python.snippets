@@ -74,7 +74,9 @@ snippet cv2rect
 cv2.rectangle(${1:img}, (${2:x1}, ${3:y1}), (${4:x2}, ${5:y2}), (0, 255, 0), 2)
 endsnippet
 
-# mxnet
+#########
+# mxnet #
+#########
 snippet conv
 conv${1:1} = mx.symbol.Convolution(
     data=${2}, num_filter=${3:96}, kernel=(${4:7}, $4), pad=(${5:3},$5), stride=(${6:2}, $6))
@@ -87,9 +89,11 @@ snippet lrn
 lrn${1:1} = mx.symbol.LRN(data=${2}, nsize=3, alpha=0.0005, beta=0.75, knorm=1)
 endsnippet
 
-# tensorflow
+##############
+# tensorflow #
+##############
 snippet place
-tf.placeholder(tf.float32, [${1}])
+tf.placeholder(tf.float32, shape=[${1}], name='${2}')
 endsnippet
 snippet var
 tf.Variable(${1})
@@ -150,6 +154,73 @@ endsnippet
 snippet runacc
 sess.run(accuracy_op, feed_dict = {${1:x}:${2}, ${3:y}:${4}})
 endsnippet
+
+snippet gpusize
+config = tf.ConfigProto()
+config.gpu_options.per_process_gpu_memory_fraction = ${1:0.5}
+#with tf.Session(config=config) as sess:
+endsnippet
+
+snippet model
+from .network import Network
+from .basenet import basenet
+import tensorflow as tf
+
+def get_network(basenet_type, n_classes, phase):
+    if phase == 'train':
+        return $1_train(basenet_type, n_classes)
+    elif phase == 'test':
+        return $1_test(basenet_type, n_classes)
+    else:
+        raise 'Undefined phase: {}'.format(phase)
+
+class ${1:net_name}_train(Network):
+    def __init__(self, basenet_type, n_classes, trainable=True):
+        self.inputs = []
+        self.data = tf.placeholder(tf.float32, shape=[None, None, None, 3], name='data')
+        self.im_info = tf.placeholder(tf.float32, shape=[None, 3], name='im_info')
+        self.keep_prob = tf.placeholder(tf.float32)
+
+        self.gt_boxes = tf.placeholder(tf.float32, shape=[None, 5], name='gt_boxes')
+        self.gt_ishard = tf.placeholder(tf.float32, shape=[None], name='gt_ishard')
+        self.dontcare_areas = tf.placeholder(tf.float32, shape=[None, 4], name='dontcare_areas')
+
+        self.layers = dict({'data':self.data, 'im_info':self.im_info, 'gt_boxes':self.gt_boxes, 'gt_ishard':self.gt_ishard, 'dontcare_areas':self.dontcare_areas})
+        self.trainable = trainable
+        self.n_classes = n_classes
+        self.basenet = basenet.get_net(basenet_type)
+
+        self.setup()
+    
+    def setup(self):
+        self = test_part(self, 'TRAIN')
+
+		# TODO, training part
+
+class $1_test(Network):
+    def __init__(self, basenet_type, n_classes, trainable=True):
+        self.inputs = []
+        self.data = tf.placeholder(tf.float32, shape=[None, None, None, 3], name='data')
+        self.im_info = tf.placeholder(tf.float32, shape=[None, 3], name='im_info')
+        self.keep_prob = tf.placeholder(tf.float32)
+
+        self.layers = dict({'data':self.data, 'im_info':self.im_info})
+        self.trainable = trainable
+        self.n_classes = n_classes
+        self.basenet = basenet.get_net(basenet_type)
+
+        self.setup()
+    
+    def setup(self):
+		self.test_part(self, 'TEST')
+
+
+def test_part(net, phase):
+	# TODO, test part
+
+    return net
+endsnippet
+
 
 snippet train
 #!/usr/bin/env python
