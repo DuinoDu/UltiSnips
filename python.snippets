@@ -77,6 +77,15 @@ endsnippet
 snippet cv2rect
 cv2.rectangle(${1:img}, (${2:x1}, ${3:y1}), (${4:x2}, ${5:y2}), (0, 255, 0), 2)
 endsnippet
+snippet cv2circle
+cv2.circle(${1:img}, (${2:x0}, ${3:y0}), ${4:r}, (0, 255, 0), 2)
+endsnippet
+
+snippet nprvt 
+${1:img} = np.reshape($1, (1,)+$1.shape)
+$1 = np.vstack(($1, $1, $1))
+$1 = np.transpose($1, (1,2,0))
+endsnippet
 
 #########
 # mxnet #
