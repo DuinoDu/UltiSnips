@@ -11,9 +11,14 @@ fi
 endsnippet
 
 
-
 snippet isdir
 if [ ! -d ${1} ];then
 	mkdir $1
 fi
+endsnippet
+
+snippet fordir
+for f in ${1:`ls *.zip`};do
+	${2:unzip $f}
+done
 endsnippet
