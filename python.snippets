@@ -41,8 +41,8 @@ cmd = '$1'
 output = output.split('\n')
 endsnippet
 
-snippet getimgs
-${1:imgfiles} = [os.path.join(${2:root}, x) for x in sorted(os.listdir($2)) if x.endswith('.jpg') ]
+snippet getimg
+${1:imgfiles} = sorted([os.path.join(${2:root}, x) for x in sorted(os.listdir($2)) if x.endswith('.jpg')])
 endsnippet
 
 snippet printi
