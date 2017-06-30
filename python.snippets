@@ -35,6 +35,21 @@ with open('${1:file}', 'r') as fid:
 	${2:var} = cPickle.load(fid)
 endsnippet
 
+snippet readxml
+#import xml.etree.ElementTree as ET
+tree = ET.parse(xmlfile)
+width = int(tree.find('size').find('width').text)
+height = int(tree.find('size').find('height').text)
+objs = tree.findall('object')
+for index, obj in enumerate(objs):
+    name = obj.find('name').text.lower()
+    bbox = obj.find('bndbox')
+    x1 = int(bbox.find('xmin').text) - 1
+    y1 = int(bbox.find('ymin').text) - 1
+    x2 = int(bbox.find('xmax').text) - 1
+    y2 = int(bbox.find('ymax').text) - 1
+endsnippet
+
 snippet sh
 cmd = '$1'
 (status, output) = commands.getstatusoutput(cmd)
