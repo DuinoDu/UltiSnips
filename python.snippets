@@ -101,6 +101,9 @@ endsnippet
 snippet cv2circle
 cv2.circle(${1:img}, (${2:x0}, ${3:y0}), ${4:r}, (0, 255, 0), 2)
 endsnippet
+snippet cv2resize
+cv2.resize(${1:img}, ($1.shape[1]/${2}, $1.shape[0]/$2))
+endsnippet
 
 snippet contour
 im = cv2.imread(${1:imgpath})
@@ -110,12 +113,6 @@ _, contours, hierarchy = cv2.findContours(im_thresh, cv2.RETR_TREE ,cv2.CHAIN_AP
 cv2.drawContours(im, contours,-1,(0,255,0),1)
 endsnippet
 
-
-snippet nprvt 
-${1:img} = np.reshape($1, (1,)+$1.shape)
-$1 = np.vstack(($1, $1, $1))
-$1 = np.transpose($1, (1,2,0))
-endsnippet
 
 #########
 # mxnet #
