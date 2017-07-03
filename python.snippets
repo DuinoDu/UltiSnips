@@ -438,3 +438,24 @@ ${1:add your function}
 t2 = time.time()    
 print "${2:msg to display}: {}".format(t2-t1)
 endsnippet
+
+
+snippet pp
+
+ncpus = 12
+ppservers = ()
+job_server = pp.Server(ncpus, ppservers=ppservers)
+
+inputs = []
+def ${1:foo_work}(${2:arg}):
+	# add yor for-loop here 
+
+start_time = time.time()
+print("Starting pp with", job_server.get_ncpus(), "workers")
+jobs = [(input, job_server.submit($1, (input,)) for input in inputs]
+for job in jobs():
+	job()
+print "Time elapsed: ", time.time() - start_time, "s"
+
+job_server.print_stats()
+endsnippet
