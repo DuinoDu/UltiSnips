@@ -28,11 +28,11 @@ endsnippet
 
 snippet dump
 with open('${2:file}', 'w') as fid:
-	cPickle.dump(${1:var}, fid)
+	pickle.dump(${1:var}, fid)
 endsnippet
 snippet load
 with open('${1:file}', 'r') as fid:
-	${2:var} = cPickle.load(fid)
+	${2:var} = pickle.load(fid)
 endsnippet
 
 snippet readxml
@@ -69,6 +69,29 @@ endsnippet
 
 snippet print
 print($1)
+endsnippet
+
+snippet printcolor "print colorful string" b
+from colorama import Fore, Style
+print( Fore.RED+'some red text' + Style.RESET_ALL )
+endsnippet
+
+snippet printtable "print table on terminal" b
+from prettytable import PrettyTable
+table = PrettyTable(['${1:name1}', '${2:name2}'])
+table.add_row([${3:name1_value}, ${4:name2_value}])
+table.sort_key($2)
+table.reversesort = True
+print(table)
+endsnippet
+
+snippet progress
+import tqdm
+t = tqdm.tqdm()
+t.total = ${1:length}
+for i in range($1):
+    t.update()
+    time.sleep(1)
 endsnippet
 
 
