@@ -125,7 +125,7 @@ snippet cv2circle
 cv2.circle(${1:img}, (${2:x0}, ${3:y0}), ${4:r}, (0, 255, 0), 2)
 endsnippet
 snippet cv2resize
-cv2.resize(${1:img}, ($1.shape[1]/${2}, $1.shape[0]/$2))
+cv2.resize(${1:img}, (int($1.shape[1]/${2}), int($1.shape[0]/$2)))
 endsnippet
 
 snippet contour
