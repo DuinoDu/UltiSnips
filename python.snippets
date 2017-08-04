@@ -2,24 +2,32 @@ snippet tool
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-'''
-python ${1:yourFunction}.py ${2:args}
-'''
+""" ${1:description}
+
+Usage:
+	${2:tool_name} <args1> <args2>
+
+Options:
+    -h, --help				Print this message
+	--path=<str>			File path [default: data/path]
+	--nums=<int>			The number of files [default:10]
+	--lr=<float>            Learning Rate [default: 0.00025]
+"""
+
 import os, sys
 
-def $1(argv):
+def $2(args):
 	${3:pass}
 
-def main():
-    import sys
-	if len(sys.argv) != 2:
-		print(__doc__)
-		return
-    $1(sys.argv)
+def main(args):
+    $2(args)
 
 if __name__ == "__main__":
-	main()
+	from docopt import docopt
+	args = docopt(docstr, version='v0.1')
+	main(args)
 endsnippet
+
 
 snippet isdir
 if not os.path.exists(${1:dirname}):
@@ -200,14 +208,12 @@ endsnippet
 snippet argmax
 tf.argmax(${1}, ${2:dimension})
 endsnippet
-
 snippet opti
 tf.train.GradientDescentOptimizer(learning_rate=${1:learning_rate}).minimize(${2:cost_op})
 endsnippet
 snippet opti
 tf.train.AdamOptimizer(learning_rate=${1:learning_rate}).minimize(${2:cost_op})
 endsnippet
-
 snippet runtrain
 sess.run(train_op, feed_dict = {${1:x}:${2}, ${3:y}:${4}})
 endsnippet
@@ -217,12 +223,12 @@ endsnippet
 snippet runacc
 sess.run(accuracy_op, feed_dict = {${1:x}:${2}, ${3:y}:${4}})
 endsnippet
-
 snippet gpusize
 config = tf.ConfigProto()
 config.gpu_options.per_process_gpu_memory_fraction = ${1:0.5}
 #with tf.Session(config=config) as sess:
 endsnippet
+
 
 snippet model
 from .network import Network
@@ -464,7 +470,6 @@ endsnippet
 
 
 snippet pp
-
 ncpus = 12
 ppservers = ()
 job_server = pp.Server(ncpus, ppservers=ppservers)
@@ -481,4 +486,19 @@ for job in jobs():
 print "Time elapsed: ", time.time() - start_time, "s"
 
 job_server.print_stats()
+endsnippet
+
+snippet docstr "arg option"
+from docopt import docopt
+docstr = """ ${1:description}
+
+Usage:
+	${2:tool_name} [options]
+
+Options:
+    -h, --help				Print this message
+	--path=<str>			File path [default: data/path]
+	--nums=<int>			The number of files [default:10]
+	--lr=<float>            Learning Rate [default: 0.00025]
+"""
 endsnippet
