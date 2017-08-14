@@ -487,3 +487,33 @@ print "Time elapsed: ", time.time() - start_time, "s"
 
 job_server.print_stats()
 endsnippet
+
+
+snippet inctorch
+import torch
+import torch.nn as nn
+import torch.optim as optim
+import torch.backends.cudnn as cudnn
+import torch.nn.init as init
+from torch.autograd import Variable
+import torch.utils.data as data
+endsnippet
+
+snippet initarg
+import argparse
+parser = argparse.ArgumentParser(description='${1:description of this script}')
+# addarg here
+
+args = parser.parse_args()
+endsnippet
+
+snippet addarg
+parser.add_argument('--${1:name}', default=${2}, type=${3:str}, help='${4:description}')
+endsnippet
+
+snippet addarg_opti
+parser.add_argument('--lr', '--learning-rate', default=1e-3, type=float, help='initial learning rate')
+parser.add_argument('--momentum', default=0.9, type=float, help='momentum')
+parser.add_argument('--weight_decay', default=5e-4, type=float, help='Weight decay for SGD')
+parser.add_argument('--gamma', default=0.1, type=float, help='Gamma update for SGD')
+endsnippet
