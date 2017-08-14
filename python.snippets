@@ -487,18 +487,3 @@ print "Time elapsed: ", time.time() - start_time, "s"
 
 job_server.print_stats()
 endsnippet
-
-snippet docstr "arg option"
-from docopt import docopt
-docstr = """ ${1:description}
-
-Usage:
-	${2:tool_name} [options]
-
-Options:
-    -h, --help				Print this message
-	--path=<str>			File path [default: data/path]
-	--nums=<int>			The number of files [default:10]
-	--lr=<float>            Learning Rate [default: 0.00025]
-"""
-endsnippet
