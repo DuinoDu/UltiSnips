@@ -2,19 +2,8 @@ snippet tool
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-""" ${1:description}
-
-Usage:
-	${2:tool_name} <args1> <args2>
-
-Options:
-    -h, --help				Print this message
-	--path=<str>			File path [default: data/path]
-	--nums=<int>			The number of files [default:10]
-	--lr=<float>            Learning Rate [default: 0.00025]
-"""
-
-import os, sys
+from __future__ import print_function
+import argparse
 
 def $2(args):
 	${3:pass}
@@ -23,8 +12,10 @@ def main(args):
     $2(args)
 
 if __name__ == "__main__":
-	from docopt import docopt
-	args = docopt(docstr, version='v0.1')
+	parser = argparse.ArgumentParser(description='${1:description of this script}')
+	# addarg here
+	
+	args = parser.parse_args()
 	main(args)
 endsnippet
 
