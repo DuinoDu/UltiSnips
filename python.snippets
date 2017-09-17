@@ -221,65 +221,6 @@ config.gpu_options.per_process_gpu_memory_fraction = ${1:0.5}
 endsnippet
 
 
-snippet model
-from .network import Network
-from .basenet import basenet
-import tensorflow as tf
-
-def get_network(basenet_type, n_classes, phase):
-    if phase == 'train':
-        return $1_train(basenet_type, n_classes)
-    elif phase == 'test':
-        return $1_test(basenet_type, n_classes)
-    else:
-        raise 'Undefined phase: {}'.format(phase)
-
-class ${1:net_name}_train(Network):
-    def __init__(self, basenet_type, n_classes, trainable=True):
-        self.inputs = []
-        self.data = tf.placeholder(tf.float32, shape=[None, None, None, 3], name='data')
-        self.im_info = tf.placeholder(tf.float32, shape=[None, 3], name='im_info')
-        self.keep_prob = tf.placeholder(tf.float32)
-
-        self.gt_boxes = tf.placeholder(tf.float32, shape=[None, 5], name='gt_boxes')
-        self.gt_ishard = tf.placeholder(tf.float32, shape=[None], name='gt_ishard')
-        self.dontcare_areas = tf.placeholder(tf.float32, shape=[None, 4], name='dontcare_areas')
-
-        self.layers = dict({'data':self.data, 'im_info':self.im_info, 'gt_boxes':self.gt_boxes, 'gt_ishard':self.gt_ishard, 'dontcare_areas':self.dontcare_areas})
-        self.trainable = trainable
-        self.n_classes = n_classes
-        self.basenet = basenet.get_net(basenet_type)
-
-        self.setup()
-    
-    def setup(self):
-        self = test_part(self, 'TRAIN')
-
-		# TODO, training part
-
-class $1_test(Network):
-    def __init__(self, basenet_type, n_classes, trainable=True):
-        self.inputs = []
-        self.data = tf.placeholder(tf.float32, shape=[None, None, None, 3], name='data')
-        self.im_info = tf.placeholder(tf.float32, shape=[None, 3], name='im_info')
-        self.keep_prob = tf.placeholder(tf.float32)
-
-        self.layers = dict({'data':self.data, 'im_info':self.im_info})
-        self.trainable = trainable
-        self.n_classes = n_classes
-        self.basenet = basenet.get_net(basenet_type)
-
-        self.setup()
-    
-    def setup(self):
-		self.test_part(self, 'TEST')
-
-
-def test_part(net, phase):
-	# TODO, test part
-
-    return net
-endsnippet
 
 
 snippet train
@@ -287,170 +228,32 @@ snippet train
 # -*- coding: utf-8 -*-
 
 import numpy as np
-import tensorflow as tf
-
-import sys, os
-from objdect.config.config import cfg, cfg_from_file
-from objdect.datasets import datasets
-from objdect.networks import fasterRCNN
-from objdect.utils.timer import Timer
-from objdect.train.roi_data_layer.layer import RoIDataLayer 
-from objdect.train.prepare_roidb import get_training_roidb
-from objdect.train.loss import loss
-from objdect.train.evaluate import evaluate_net
-
-import pdb
 
 # parameters
-cfg_from_file(os.path.join(this_dir, 'config.yml'))
 
 
 # data (dsX, dsY)
-dataset_path = os.path.join(os.environ['HOME'], '${1:data/VOCdevkit}')
-imdb_name = 'voc_2007_trainval'
-imdb = datasets.get_imdb(imdb_name, dataset_path)
-n_classes = 21
 
-
-# data-preprocess
-roidb = get_training_roidb(imdb)
-
-
-## model
-basenet_name = 'vgg16'
-pretrained_model = os.path.join('${2:/home/duino/project/objdect/data}/pretrain_model/VGG_imagenet.npy')
-net = fasterRCNN.get_network(basenet_name, n_classes, 'train')
-
-
-# cost
-loss, cross_entropy, loss_box, rpn_cross_entropy, rpn_loss_box = loss.build_loss(net)
-
-
-# optimizer
-if cfg.TRAIN.SOLVER == 'Adam':
-    opt = tf.train.AdamOptimizer(cfg.TRAIN.lr)
-elif cfg.TRAIN.SOLVER == 'RMS':
-    opt = tf.train.RMSPropOptimizer(cfg.TRAIN.lr)
-elif cfg.TRAIN.solver == 'MOM':
-    lr = tf.Variable(cfg.TRAIN.lr, trainable=False)
-    opt = tf.train.MomentumOptimizer(cfg.TRAIN.lr, cfg.TRAIN.momentum)
-else:
-    raise NotImplementedError
-train_op = opt.minimize(loss)
-
-
-# summary
-tf.summary.scalar('rpn_box_loss', rpn_loss_box)
-tf.summary.scalar('rpn_cls_loss', rpn_cross_entropy)
-tf.summary.scalar('box_loss', loss_box)
-tf.summary.scalar('cls_loss', cross_entropy)
-tf.summary.scalar('loss', loss)
-summary_op = tf.summary.merge_all()
-
-
-# train
-with tf.Session() as sess:
-    sess.run(tf.global_variables_initializer())
-	restore_iter = 0
-
-    ## load_pretrained_model
-    if pretrained_model is not None and not cfg.TRAIN.restore:
-        try:
-            print ('Loading pretrained model weights from {:s}'.format(pretrained_model))
-            net.load(pretrained_model, sess, ignore_missing=True)
-        except:
-            raise 'Check your pretrained model {:s}'.format(pretrained_model)
-
-    if cfg.TRAIN.restore:
-        try:
-            ckpt = tf.train.get_checkpoint_state(cfg.TRAIN.output_dir)
-            print 'Restoring from {}...'.format(ckpt.model_checkpoint_path),
-            self.saver.restore(sess, ckpt.model_checkpoint_path)
-            stem = os.path.splitext(os.path.basename(ckpt.model_checkpoint_path))[0]
-            restore_iter = int(stem.split('_')[-1])
-            sess.run(global_step.assign(restore_iter))
-            print 'done'
-        except:
-            raise 'Check your pretrained {:s}'.format(ckpt.model_checkpoint_path)
-
-    ## train
-    last_snapshot_iter = -1
-    timer = Timer()
-    for iter in range(restore_iter, cfg.TRAIN.max_iters):
-        timer.tic()
-        
-		# adjust learning rate if using MomentumOptimizer
-        if iter != 0 and iter % cfg.TRAIN.stepsize == 0:
-            sess.run(tf.assign(lr, lr.eval() * cfg.TRAIN.gamma))
-
-        # get one batch
-        data_layer = RoIDataLayer(roidb, imdb.num_classes)
-        blobs = data_layer.forward()
-        if (iter + 1) % (cfg.TRAIN.DISPLAY) == 0:
-            print 'image: %s' %(blobs['im_name']),
-
-        feed_dict = {
-            net.data: blobs['data'],
-            net.im_info: blobs['im_info'],
-            net.keep_prob: 0.5,
-            net.gt_boxes: blobs['gt_boxes'],
-            net.gt_ishard: blobs['gt_ishard'],
-            net.dontcare_areas: blobs['dontcare_areas']
-        }
-        res_fetches = [
-            net.get_output('cls_prob'),
-            net.get_output('bbox_pred'),
-            net.get_output('rois')
-        ]
-        fetch_list = [rpn_cross_entropy,
-                      rpn_loss_box,
-                      train_op] + res_fetches
-        fetch_list += []
-
-        # train
-        rpn_loss_cls_value, rpn_loss_box_value, loss_cls_value, loss_box_value, _, cls_prob, bbox_pred, rois = sess.run(fetches=fetch_list, feed_dict=feed_dict)
-
-        _diff_time = timer.toc()
-
-        if (iter) % (cfg.TRAIN.DISPLAY) == 0:
-            print 'iter: %d / %d, rpn_loss_cls: %.4f, rpn_loss_box: %.4f, loss_cls: %.4f, loss_box: %.4f, lr: %f'%(iter, max_iters, rpn_loss_cls_value, rpn_loss_box_value, loss_cls_value, loss_box_value, learning_rate)
-            print 'speed: {:.3f}s / iter'.format(_diff_time)
-
-        if (iter+1) % cfg.TRAIN.SNAPSHOT_ITERS == 0:
-            last_snapshot_iter = iter
-            self.snapshot(sess, iter)
-
-# evaluate
-with tf.Session() as sess:
-    sess.run(tf.global_variables_initializer())
-    evaluate_net(sess, net, imdb)
-endsnippet
-
-# machine learning
-snippet ml
-import numpy as np
-import tensorflow as tf
-from sklearn.utils import shuffle
-
-# parameters
-learning_rate = 0.05
-epoches = 1000
-print_period = 10
-print_en = True
-
-# data (dsX, dsY)
-
-# data-preprocess
 
 # model
 
+
 # cost
+
 
 # optimizer
 
+
+# summary
+
+
 # train
 
+
+# evaluate
+
 endsnippet
+
 
 snippet tic
 t1 = time.time()
@@ -513,4 +316,27 @@ snippet setgpu
 parser.add_argument('--gpuID', default=0, type=int, help='Use which gpu to train model')
 import os
 os.environ['CUDA_VISIBLE_DIVICES']I = str(args.gpuID)
+endsnippet
+
+snippet model
+import torch
+import torch.nn as nn
+import torch.nn.init as init
+
+class ${1:name}(nn.Module):
+
+    def __init__(self):
+        super($1, self).__init__()
+        # TODO: design model
+
+    def forward(self, x):
+        # TODO: build model
+        return x
+
+    def init_weight(self, weight_file=None):
+        pass
+
+if __name__ == "__main__":
+    # TODO: test model
+    pass
 endsnippet
