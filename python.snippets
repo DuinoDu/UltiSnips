@@ -315,7 +315,7 @@ endsnippet
 snippet setgpu
 parser.add_argument('--gpuID', default=0, type=int, help='Use which gpu to train model')
 import os
-os.environ['CUDA_VISIBLE_DIVICES']I = str(args.gpuID)
+os.environ['CUDA_VISIBLE_DIVICES'] = str(args.gpuID)
 endsnippet
 
 snippet model
