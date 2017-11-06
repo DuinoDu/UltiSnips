@@ -340,3 +340,15 @@ if __name__ == "__main__":
     # TODO: test model
     pass
 endsnippet
+
+snippet testnet
+if __name__ == "__main__":
+    from torch.autograd import Variable
+    net = ${1:Model}(2)
+    x = Variable(torch.randn(1,3,1000,800))
+    pred = net(x)
+    print(pred.size())
+
+    import IPython
+    IPython.embed()
+endsnippet
