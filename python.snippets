@@ -352,3 +352,12 @@ if __name__ == "__main__":
     import IPython
     IPython.embed()
 endsnippet
+
+snippet summary
+parser.add_argument('--tensorboard', default=1, type=int, help='Use tensorboard for loss visualization')
+if args.tensorboard:
+   from tensorboard import SummaryWriter
+   writer = SummaryWriter()
+if args.tensorboard:
+¦   writer.add_scalar('${1:train_loss/cls}', ${2:loss.data[0]}, ${3:iteration})
+endsnippet
