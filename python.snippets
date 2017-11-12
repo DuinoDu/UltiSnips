@@ -360,6 +360,7 @@ if args.tensorboard:
    writer = SummaryWriter()
 if args.tensorboard:
 ¦   writer.add_scalar('${1:train_loss/cls}', ${2:loss.data[0]}, ${3:iteration})
+write.close()
 endsnippet
 
 snippet ask
