@@ -6,6 +6,14 @@ end
 endsnippet
 
 
+snippet listdir
+f = io.popen('ls ' .. ${1:dirname})
+for name in f:lines() do 
+	${2:print(name)}
+end
+endsnippet
+
+
 snippet sh
 os.execute('${1}')
 endsnippet
@@ -17,8 +25,10 @@ endsnippet
 
 
 snippet pdb
+
 local pdb = require('debugger')
 pdb()
+
 endsnippet
 
 
@@ -31,6 +41,30 @@ cmd:text('Options')
 args = cmd:parse(arg)
 endsnippet
 
+
 snippet addarg
 cmd:option('--${1:name}', ${2:123/false/'str'}, '${3:description}')
+endsnippet
+
+
+snippet read
+file = io.open(${1:filename},'r')
+for line in file:lines() do
+	print(line)
+endf
+file:close()
+endsnippet
+
+
+snippet write
+file = io.open(${1:filename}, 'w')
+file:write(${2:str})
+file:close()
+endsnippet
+
+
+snippet writehdf5
+local f = hdf5.open('${1:filename}.h5', 'w')
+f:write('${2:var_name}', ${3:var})
+f:close()
 endsnippet
