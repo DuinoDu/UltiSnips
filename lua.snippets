@@ -1,0 +1,36 @@
+snippet isdir
+require 'paths'
+if not paths.dirp(${1:dirname}) then
+	paths.mkdir($1)
+end
+endsnippet
+
+
+snippet sh
+os.execute('${1}')
+endsnippet
+
+
+snippet clean
+collectgarbage()
+endsnippet
+
+
+snippet pdb
+local pdb = require('debugger')
+pdb()
+endsnippet
+
+
+snippet arginit
+require 'torch'
+cmd = torch.CmdLine()
+cmd:text('${1:Description}')
+cmd:text('Options')
+-- add options
+args = cmd:parse(arg)
+endsnippet
+
+snippet addarg
+cmd:option('--${1:name}', ${2:123/false/'str'}, '${3:description}')
+endsnippet
