@@ -415,7 +415,7 @@ endsnippet
 snippet summary
 parser.add_argument('--tensorboard', default=1, type=int, help='Use tensorboard for loss visualization')
 if args.tensorboard:
-   from tensorboard import SummaryWriter
+   from tensorboardX import SummaryWriter
    writer = SummaryWriter()
 # insert to train loop
 if args.tensorboard:
