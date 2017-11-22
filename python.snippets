@@ -70,9 +70,10 @@ snippet print
 print($1)
 endsnippet
 
+
 snippet printcolor "print colorful string" b
-from colorama import Fore, Style
-print( Fore.RED+'some red text' + Style.RESET_ALL )
+from termcolor import cprint  
+cprint(i, 'green', 'on_red', end=' ') 
 endsnippet
 
 snippet printtable "print table on terminal" b
