@@ -50,6 +50,7 @@ for index, obj in enumerate(objs):
 endsnippet
 
 snippet sh
+import commands
 cmd = '$1'
 (status, output) = commands.getstatusoutput(cmd)
 output = output.split('\n')
