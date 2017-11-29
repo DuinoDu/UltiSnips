@@ -1,24 +1,8 @@
-snippet tool
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
-
-from __future__ import print_function
-import argparse
-
-def $2(args):
-	${3:pass}
-
-def main(args):
-    $2(args)
-
-if __name__ == "__main__":
-	parser = argparse.ArgumentParser(description='${1:description of this script}')
-	# addarg here
-	
-	args = parser.parse_args()
-	main(args)
-endsnippet
-
+####################################
+#
+# os, file, folder, read, write
+#
+####################################
 
 snippet isdir
 if not os.path.exists(${1:dirname}):
@@ -32,6 +16,10 @@ endsnippet
 snippet load
 with open('${1:file}', 'r') as fid:
 	${2:var} = pickle.load(fid)
+endsnippet
+
+snippet getimg
+${1:imgfiles} = sorted([os.path.join(${2:root}, x) for x in sorted(os.listdir($2)) if x.endswith('.jpg')])
 endsnippet
 
 snippet readxml
@@ -56,8 +44,15 @@ cmd = '$1'
 output = output.split('\n')
 endsnippet
 
-snippet getimg
-${1:imgfiles} = sorted([os.path.join(${2:root}, x) for x in sorted(os.listdir($2)) if x.endswith('.jpg')])
+
+####################################
+#
+# display, show 
+#
+####################################
+
+snippet print
+print($1)
 endsnippet
 
 snippet printi
@@ -66,11 +61,6 @@ snippet printi
     i += 1 # set i = 0 before looping
 print '\nFinish!'
 endsnippet
-
-snippet print
-print($1)
-endsnippet
-
 
 snippet printcolor "print colorful string" b
 from termcolor import cprint  
@@ -96,11 +86,11 @@ for i in range($1):
 endsnippet
 
 
-snippet prop
-@property
-def ${1:name}(self):
-    return self._$1
-endsnippet
+####################################
+#
+# cv2 
+#
+####################################
 
 snippet camera
 cap = cv2.VideoCapture(0)
@@ -143,9 +133,52 @@ cv2.drawContours(im, contours,-1,(0,255,0),1)
 endsnippet
 
 
-#########
-# mxnet #
-#########
+####################################
+#
+# numpy
+#
+####################################
+
+snippet tohwc
+${1:ndarray} = np.transpose(${2:ndarray}, (1,2,0))
+endsnippet
+
+snippet tochw
+${1:ndarray} = np.transpose(${2:ndarray}, (2,0,1))
+endsnippet
+
+
+
+####################################
+#
+# pytorch
+#
+####################################
+
+snippet totorch
+${1:tensor} = torch.from_numpy(${2:ndarray})
+endsnippet
+
+snippet tonumpy
+${1:ndarray} = torch.cpu().numpy(${2:tensor})
+endsnippet
+
+snippet inctorch
+import torch
+import torch.nn as nn
+import torch.backends.cudnn as cudnn
+import torch.nn.init as init
+from torch.autograd import Variable
+import torch.utils.data as data
+endsnippet
+
+
+####################################
+#
+# mxnet
+#
+####################################
+
 snippet conv
 conv${1:1} = mx.symbol.Convolution(
     data=${2}, num_filter=${3:96}, kernel=(${4:7}, $4), pad=(${5:3},$5), stride=(${6:2}, $6))
@@ -158,9 +191,12 @@ snippet lrn
 lrn${1:1} = mx.symbol.LRN(data=${2}, nsize=3, alpha=0.0005, beta=0.75, knorm=1)
 endsnippet
 
-##############
-# tensorflow #
-##############
+####################################
+#
+# tensorflow 
+#
+####################################
+
 snippet place
 tf.placeholder(tf.float32, shape=[${1}], name='${2}')
 endsnippet
@@ -230,43 +266,31 @@ endsnippet
 
 
 
+####################################
+#
+# framework
+#
+####################################
 
+snippet tool
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
 
-snippet tic
-t1 = time.time()
-${1:add your function}
-t2 = time.time()    
-print "${2:msg to display}: {}".format(t2-t1)
-endsnippet
+from __future__ import print_function
+import argparse
 
+def $2(args):
+	${3:pass}
 
-snippet pp
-ncpus = 12
-ppservers = ()
-job_server = pp.Server(ncpus, ppservers=ppservers)
+def main(args):
+    $2(args)
 
-inputs = []
-def ${1:foo_work}(${2:arg}):
-	# add yor for-loop here 
-
-start_time = time.time()
-print("Starting pp with", job_server.get_ncpus(), "workers")
-jobs = [(input, job_server.submit($1, (input,)) for input in inputs]
-for job in jobs():
-	job()
-print "Time elapsed: ", time.time() - start_time, "s"
-
-job_server.print_stats()
-endsnippet
-
-
-snippet inctorch
-import torch
-import torch.nn as nn
-import torch.backends.cudnn as cudnn
-import torch.nn.init as init
-from torch.autograd import Variable
-import torch.utils.data as data
+if __name__ == "__main__":
+	parser = argparse.ArgumentParser(description='${1:description of this script}')
+	# addarg here
+	
+	args = parser.parse_args()
+	main(args)
 endsnippet
 
 
@@ -298,8 +322,8 @@ import numpy as np
 
 
 # evaluate
-
 endsnippet
+
 
 
 snippet dataset
@@ -331,6 +355,7 @@ class ${1:dataset name}(data.Dataset):
 		pass
 endsnippet
 
+
 snippet dataloader
 dataset = ${1:dataset_name}(${2:args})
 dataloader_${3:train|val} = data.DataLoader(dataset, args.batch_size, num_workers=args.num_workers, shuffle=args.shuffle, pin_memory=args.pin_memory)
@@ -343,8 +368,6 @@ parser.add_argument('--num_workers', default=2, type=int, help='num of workers t
 parser.add_argument('--shuffle', default=y, type=str2bool, help='shuffle data when loading data')
 parser.add_argument('--pin_memory', default=y, type=str2bool, help='pin memory when loading data')
 endsnippet
-
-
 
 
 snippet initarg
@@ -365,6 +388,7 @@ parser.add_argument('--gpuID', default=0, type=int, help='Use which gpu to train
 import os
 os.environ['CUDA_VISIBLE_DIVICES'] = str(args.gpuID)
 endsnippet
+
 
 snippet model
 import torch
@@ -389,6 +413,7 @@ if __name__ == "__main__":
     pass
 endsnippet
 
+
 snippet testnet
 if __name__ == "__main__":
     from torch.autograd import Variable
@@ -401,6 +426,7 @@ if __name__ == "__main__":
     IPython.embed()
 endsnippet
 
+
 snippet optim
 parser.add_argument('--lr', '--learning-rate', default=1e-3, type=float, help='initial learning rate')
 parser.add_argument('--momentum', default=0.9, type=float, help='momentum')
@@ -412,12 +438,14 @@ optimizer = torch.optim.SGD(${1:model}.parameters(), args.lr,
                             weight_decay=args.weight_decay)
 endsnippet
 
+
 snippet lr
 import torch.optim.lr_scheduler as lr_scheduler
 lr_sche = lr_scheduler.StepLR(optimizer, step_size=30, gamma=args.gamma)
 # insert to train loop
 lr_sche.step()
 endsnippet
+
 
 snippet summary
 parser.add_argument('--tensorboard', default=1, type=int, help='Use tensorboard for loss visualization')
@@ -429,6 +457,7 @@ if args.tensorboard:
 ¦   writer.add_scalar('${1:train_loss/cls}', ${2:loss.data[0]}, ${3:iteration})
 write.close()
 endsnippet
+
 
 snippet ask
 import six
@@ -517,4 +546,38 @@ def ask(question, answer=str_compat, default=None, l=None):
 # value = ask('question?', str_compat, 'default')
 # value = ask('question?', int, 0)
 # value = ask('question?', bool, default)
+endsnippet
+
+
+####################################
+#
+# tool 
+#
+####################################
+
+snippet tic
+t1 = time.time()
+${1:add your function}
+t2 = time.time()    
+print "${2:msg to display}: {}".format(t2-t1)
+endsnippet
+
+
+snippet pp
+ncpus = 12
+ppservers = ()
+job_server = pp.Server(ncpus, ppservers=ppservers)
+
+inputs = []
+def ${1:foo_work}(${2:arg}):
+	# add yor for-loop here 
+
+start_time = time.time()
+print("Starting pp with", job_server.get_ncpus(), "workers")
+jobs = [(input, job_server.submit($1, (input,)) for input in inputs]
+for job in jobs():
+	job()
+print "Time elapsed: ", time.time() - start_time, "s"
+
+job_server.print_stats()
 endsnippet
