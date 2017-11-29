@@ -44,6 +44,10 @@ cmd = '$1'
 output = output.split('\n')
 endsnippet
 
+snippet addpath
+import os, sys
+sys.path.append(os.path.join(os.path.dirname(__file__), "${1:..}"))
+endsnippet
 
 ####################################
 #
