@@ -49,6 +49,10 @@ import os, sys
 sys.path.append(os.path.join(os.path.dirname(__file__), "${1:..}"))
 endsnippet
 
+snippet sort
+${1:x} = sorted($1, key=lambda ${2:input} : $2[${3:"keyname"|0}])
+endsnippet
+
 ####################################
 #
 # display, show 
