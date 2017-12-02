@@ -1,0 +1,54 @@
+########
+#	   #
+# math #
+#	   #
+########
+
+
+#############
+#			#
+# algorithm #
+#			#
+#############
+snippet algo
+\documentclass{article}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+
+\begin{document} % delete
+
+\begin{algorithm}
+\caption{${1:Description}}
+\begin{algorithmic}[1]
+
+${2}
+
+\end{algorithmic}
+\end{algorithm}
+
+\end{document}
+endsnippet
+
+snippet procedure
+\Procedure {${1:name}{${2:args}}}
+\EndProcedure
+endsnippet
+
+snippet for
+\For {${1:var}}
+\State {${2:TODO}}
+\EndFor
+endsnippet
+
+snippet state
+\State {$1}
+endsnippet
+
+snippet hidenumber
+\LinesNumberedHidden{
+%\begin{algorithm}
+...
+%\end{algorithm}
+}
+endsnippet
+
