@@ -53,6 +53,15 @@ snippet sort
 ${1:x} = sorted($1, key=lambda ${2:input} : $2[${3:"keyname"|0}])
 endsnippet
 
+snippet re
+import re
+m = re.search('${1:reg pattern}', ${2:str})
+if m is not None:
+	output = m.group(0)
+else:
+	pass
+endsnippet
+
 ####################################
 #
 # display, show 
