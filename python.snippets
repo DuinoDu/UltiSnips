@@ -190,6 +190,138 @@ import torch.utils.data as data
 endsnippet
 
 
+snippet setgpu
+parser.add_argument('--cuda', default=1, type=int, help='if using cuda')
+parser.add_argument('--gpuID', default=0, type=int, help='Use which gpu to train model')
+import os
+os.environ['CUDA_VISIBLE_DIVICES'] = str(args.gpuID)
+if args.cuda:
+	torch.cuda.set_device(args.gpuID)
+endsnippet
+
+snippet model
+import torch
+import torch.nn as nn
+import torch.nn.init as init
+
+class ${1:name}(nn.Module):
+
+    def __init__(self):
+        super($1, self).__init__()
+        # TODO: design model
+
+    def forward(self, x):
+        # TODO: build model
+        return x
+
+    def init_weight(self, weight_file=None):
+        pass
+
+if __name__ == "__main__":
+    # TODO: test model
+    pass
+endsnippet
+
+
+snippet testnet
+if __name__ == "__main__":
+    from torch.autograd import Variable
+    net = ${1:Model}(2)
+    x = Variable(torch.randn(1,3,1000,800))
+    pred = net(x)
+    print(pred.size())
+
+    import IPython
+    IPython.embed()
+endsnippet
+
+
+
+
+snippet lr
+import torch.optim.lr_scheduler as lr_scheduler
+lr_sche = lr_scheduler.StepLR(optimizer, step_size=30, gamma=args.gamma)
+# insert to train loop
+lr_sche.step()
+endsnippet
+
+
+snippet summary
+parser.add_argument('--tensorboard', default=1, type=int, help='Use tensorboard for loss visualization')
+if args.tensorboard:
+   from tensorboardX import SummaryWriter
+   writer = SummaryWriter()
+# insert to train loop
+if args.tensorboard:
+¦   writer.add_scalar('${1:train_loss/cls}', ${2:loss.data[0]}, ${3:iteration})
+write.close()
+endsnippet
+
+
+snippet dataset
+import torch.utils.data as data
+
+class ${1:dataset name}(data.Dataset):
+    """${2: description}
+
+    Arguments:
+        root (string): root of dataset.
+    """
+
+    def __init__(self, root, transform=None):
+        self.root = root
+        self.image_set = image_sets
+        self.transform = transform # data-aug
+        self.name = ${3:dataset_name}
+        self._imgpath = ${4:image path}
+        self._annofile = ${5:annotation file}
+        self.ids = list()
+		# TODO: add self.ids
+
+    def __len__(self):
+        return len(self.ids)
+
+    def __getitem__(self, index):
+		# TODO: fetch [x, y]
+        #return im, gt
+		pass
+endsnippet
+
+snippet dataloader
+dataset = ${1:dataset_name}(${2:args})
+dataloader_${3:train|val} = data.DataLoader(dataset, args.batch_size, num_workers=args.num_workers, shuffle=args.shuffle, pin_memory=args.pin_memory)
+
+# add to argparse
+def str2bool(i):
+	return i.lowers() in ['y','t','yes','true','1']
+parser.add_argument('--batch_size', default=16, type=int, help='batch size for train and val')
+parser.add_argument('--num_workers', default=2, type=int, help='num of workers to load data')
+parser.add_argument('--shuffle', default=y, type=str2bool, help='shuffle data when loading data')
+parser.add_argument('--pin_memory', default=y, type=str2bool, help='pin memory when loading data')
+endsnippet
+
+snippet initarg
+import argparse
+parser = argparse.ArgumentParser(description='${1:description of this script}')
+args = parser.parse_args()
+endsnippet
+
+snippet addarg
+parser.add_argument('--${1:name}', default=${2}, type=${3:str}, help='${4:description}')
+endsnippet
+
+snippet optim
+parser.add_argument('--lr', '--learning-rate', default=1e-3, type=float, help='initial learning rate')
+parser.add_argument('--momentum', default=0.9, type=float, help='momentum')
+parser.add_argument('--weight_decay', default=5e-4, type=float, help='Weight decay for SGD')
+parser.add_argument('--gamma', default=0.1, type=float, help='Gamma update for SGD')
+
+optimizer = torch.optim.SGD(${1:model}.parameters(), args.lr,
+                            momentum=args.momentum,
+                            weight_decay=args.weight_decay)
+endsnippet
+
+
 ####################################
 #
 # mxnet
@@ -343,137 +475,8 @@ endsnippet
 
 
 
-snippet dataset
-import torch.utils.data as data
-
-class ${1:dataset name}(data.Dataset):
-    """${2: description}
-
-    Arguments:
-        root (string): root of dataset.
-    """
-
-    def __init__(self, root, transform=None):
-        self.root = root
-        self.image_set = image_sets
-        self.transform = transform # data-aug
-        self.name = ${3:dataset_name}
-        self._imgpath = ${4:image path}
-        self._annofile = ${5:annotation file}
-        self.ids = list()
-		# TODO: add self.ids
-
-    def __len__(self):
-        return len(self.ids)
-
-    def __getitem__(self, index):
-		# TODO: fetch [x, y]
-        #return im, gt
-		pass
-endsnippet
 
 
-snippet dataloader
-dataset = ${1:dataset_name}(${2:args})
-dataloader_${3:train|val} = data.DataLoader(dataset, args.batch_size, num_workers=args.num_workers, shuffle=args.shuffle, pin_memory=args.pin_memory)
-
-# add to argparse
-def str2bool(i):
-	return i.lowers() in ['y','t','yes','true','1']
-parser.add_argument('--batch_size', default=16, type=int, help='batch size for train and val')
-parser.add_argument('--num_workers', default=2, type=int, help='num of workers to load data')
-parser.add_argument('--shuffle', default=y, type=str2bool, help='shuffle data when loading data')
-parser.add_argument('--pin_memory', default=y, type=str2bool, help='pin memory when loading data')
-endsnippet
-
-
-snippet initarg
-import argparse
-parser = argparse.ArgumentParser(description='${1:description of this script}')
-# addarg here
-
-args = parser.parse_args()
-endsnippet
-
-snippet addarg
-parser.add_argument('--${1:name}', default=${2}, type=${3:str}, help='${4:description}')
-endsnippet
-
-
-snippet setgpu
-parser.add_argument('--gpuID', default=0, type=int, help='Use which gpu to train model')
-import os
-os.environ['CUDA_VISIBLE_DIVICES'] = str(args.gpuID)
-endsnippet
-
-
-snippet model
-import torch
-import torch.nn as nn
-import torch.nn.init as init
-
-class ${1:name}(nn.Module):
-
-    def __init__(self):
-        super($1, self).__init__()
-        # TODO: design model
-
-    def forward(self, x):
-        # TODO: build model
-        return x
-
-    def init_weight(self, weight_file=None):
-        pass
-
-if __name__ == "__main__":
-    # TODO: test model
-    pass
-endsnippet
-
-
-snippet testnet
-if __name__ == "__main__":
-    from torch.autograd import Variable
-    net = ${1:Model}(2)
-    x = Variable(torch.randn(1,3,1000,800))
-    pred = net(x)
-    print(pred.size())
-
-    import IPython
-    IPython.embed()
-endsnippet
-
-
-snippet optim
-parser.add_argument('--lr', '--learning-rate', default=1e-3, type=float, help='initial learning rate')
-parser.add_argument('--momentum', default=0.9, type=float, help='momentum')
-parser.add_argument('--weight_decay', default=5e-4, type=float, help='Weight decay for SGD')
-parser.add_argument('--gamma', default=0.1, type=float, help='Gamma update for SGD')
-
-optimizer = torch.optim.SGD(${1:model}.parameters(), args.lr,
-                            momentum=args.momentum,
-                            weight_decay=args.weight_decay)
-endsnippet
-
-
-snippet lr
-import torch.optim.lr_scheduler as lr_scheduler
-lr_sche = lr_scheduler.StepLR(optimizer, step_size=30, gamma=args.gamma)
-# insert to train loop
-lr_sche.step()
-endsnippet
-
-
-snippet summary
-parser.add_argument('--tensorboard', default=1, type=int, help='Use tensorboard for loss visualization')
-if args.tensorboard:
-   from tensorboardX import SummaryWriter
-   writer = SummaryWriter()
-# insert to train loop
-if args.tensorboard:
-¦   writer.add_scalar('${1:train_loss/cls}', ${2:loss.data[0]}, ${3:iteration})
-write.close()
-endsnippet
 
 
 snippet ask

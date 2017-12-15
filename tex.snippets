@@ -9,8 +9,54 @@ snippet init
 \begin{document}
 \maketitle
 % start writing
-hello, world % This is comment
 \end{document}
+endsnippet
+
+
+snippet init2
+\documentclass{article}
+\author{${1:my name}}
+\title{${2:title}}
+
+\begin{document}
+\section*{Abstract}
+
+\section{Introduction}
+
+\section{Related Work}
+\noindent\textbf{topic1} begin
+
+\noindent\textbf{topic2} begin
+
+\noindent\textbf{topic3} begin
+
+\section{Method}
+
+\section{Experiments}
+% Describe dataset, how to test
+
+\subsection{Implemetation Details}
+
+\subsection{Ablation Experiments}
+
+\subsection{[add other exps]}
+
+\section{Conclusion}
+
+\end{document}
+endsnippet
+
+snippet zh
+% replace \documentclass{article}
+\documentclass{ctexart}
+endsnippet
+
+snippet cite
+\usepackage{hyperref}
+%\begin{document}
+\bibliographystyle{plain}
+\bibliography{${1:bib name}}
+%[usage] \cite{name}
 endsnippet
 
 ########
