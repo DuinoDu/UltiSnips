@@ -189,6 +189,16 @@ from torch.autograd import Variable
 import torch.utils.data as data
 endsnippet
 
+snippet loadgan
+parser.add_argument('--resume', default="", type=str, help='resume weight pth path')
+if args.resume != "":
+	net.load_state_dicts(torch.load(args.resume))
+endsnippet
+
+snippet savegan
+torch.save(net.state_dicts(), os.path.join(args.save_folder, 'weights.pth'))
+endsnippet
+
 
 snippet setgpu
 parser.add_argument('--cuda', default=1, type=int, help='if using cuda')
@@ -234,8 +244,6 @@ if __name__ == "__main__":
     import IPython
     IPython.embed()
 endsnippet
-
-
 
 
 snippet lr
