@@ -165,7 +165,6 @@ ${1:ndarray} = np.transpose(${2:ndarray}, (2,0,1))
 endsnippet
 
 
-
 ####################################
 #
 # pytorch
@@ -209,6 +208,69 @@ if args.cuda:
 	torch.cuda.set_device(args.gpuID)
 endsnippet
 
+
+snippet dataset
+import torch.utils.data as data
+
+class ${1:dataset name}(data.Dataset):
+    """${2: description}
+
+    Arguments:
+        root (string): root of dataset.
+    """
+
+    def __init__(self, root, transform=None):
+        self.root = root
+        self.image_set = image_sets
+        self.transform = transform # data-aug
+        self.name = ${3:dataset_name}
+        self._imgpath = ${4:image path}
+        self._annofile = ${5:annotation file}
+        self.ids = list()
+		# TODO: add self.ids
+
+    def __len__(self):
+        return len(self.ids)
+
+    def __getitem__(self, index):
+		# TODO: fetch [x, y]
+        #return im, gt
+		pass
+endsnippet
+
+snippet tran
+class ${1:name}(object):
+    def __init__(self, ${2:args}):
+		self.$2 = $2
+		pass
+    def __call__(self, im, ${3:args}):
+		pass
+endsnippet
+
+snippet dataloader
+dataset = ${1:dataset_name}(${2:args})
+dataloader_${3:train|val} = data.DataLoader(dataset, args.batch_size, num_workers=args.num_workers, shuffle=args.shuffle, pin_memory=args.pin_memory)
+
+# add to argparse
+def str2bool(i):
+	return i.lowers() in ['y','t','yes','true','1']
+parser.add_argument('--batch_size', default=16, type=int, help='batch size for train and val')
+parser.add_argument('--num_workers', default=2, type=int, help='num of workers to load data')
+parser.add_argument('--shuffle', default=y, type=str2bool, help='shuffle data when loading data')
+parser.add_argument('--pin_memory', default=y, type=str2bool, help='pin memory when loading data')
+endsnippet
+
+snippet testds
+if __name__ == '__main__':
+	import os
+	root = os.path.join(os.environ['HOME'], 'data/VOCdevkit')
+	ds = ${1:dataset name}(root)
+	print("dataset len :", len(ds))
+
+	import IPython
+	IPython.embed()
+endsnippet
+
 snippet model
 import torch
 import torch.nn as nn
@@ -231,7 +293,6 @@ if __name__ == "__main__":
     # TODO: test model
     pass
 endsnippet
-
 
 snippet testnet
 if __name__ == "__main__":
@@ -266,47 +327,6 @@ write.close()
 endsnippet
 
 
-snippet dataset
-import torch.utils.data as data
-
-class ${1:dataset name}(data.Dataset):
-    """${2: description}
-
-    Arguments:
-        root (string): root of dataset.
-    """
-
-    def __init__(self, root, transform=None):
-        self.root = root
-        self.image_set = image_sets
-        self.transform = transform # data-aug
-        self.name = ${3:dataset_name}
-        self._imgpath = ${4:image path}
-        self._annofile = ${5:annotation file}
-        self.ids = list()
-		# TODO: add self.ids
-
-    def __len__(self):
-        return len(self.ids)
-
-    def __getitem__(self, index):
-		# TODO: fetch [x, y]
-        #return im, gt
-		pass
-endsnippet
-
-snippet dataloader
-dataset = ${1:dataset_name}(${2:args})
-dataloader_${3:train|val} = data.DataLoader(dataset, args.batch_size, num_workers=args.num_workers, shuffle=args.shuffle, pin_memory=args.pin_memory)
-
-# add to argparse
-def str2bool(i):
-	return i.lowers() in ['y','t','yes','true','1']
-parser.add_argument('--batch_size', default=16, type=int, help='batch size for train and val')
-parser.add_argument('--num_workers', default=2, type=int, help='num of workers to load data')
-parser.add_argument('--shuffle', default=y, type=str2bool, help='shuffle data when loading data')
-parser.add_argument('--pin_memory', default=y, type=str2bool, help='pin memory when loading data')
-endsnippet
 
 snippet initarg
 import argparse
