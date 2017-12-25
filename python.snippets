@@ -216,15 +216,17 @@ class ${1:dataset name}(data.Dataset):
     """${2: description}
 
     Arguments:
-        root (string): root of dataset.
+        root (str): root of dataset.
+		split (str): 'train' | 'val' | 'trainval'
     """
 
-    def __init__(self, root, transform=None):
+    def __init__(self, root, split, transform=None, target_transform=None):
         self.root = root
-        self.image_set = image_sets
+        self.image_set = split
         self.transform = transform # data-aug
+		self.target_transform = target_transform
         self.name = ${3:dataset_name}
-        self._imgpath = ${4:image path}
+        self._imgfile = ${4:image path}
         self._annofile = ${5:annotation file}
         self.ids = list()
 		# TODO: add self.ids
@@ -238,14 +240,6 @@ class ${1:dataset name}(data.Dataset):
 		pass
 endsnippet
 
-snippet tran
-class ${1:name}(object):
-    def __init__(self, ${2:args}):
-		self.$2 = $2
-		pass
-    def __call__(self, im, ${3:args}):
-		pass
-endsnippet
 
 snippet dataloader
 dataset = ${1:dataset_name}(${2:args})
@@ -270,6 +264,23 @@ if __name__ == '__main__':
 	import IPython
 	IPython.embed()
 endsnippet
+
+snippet addtran
+if self.transform != None:
+	im = self.transform
+if self.target_transform != None:
+	im, gt = self.target_transform(im, gt)
+endsnippet
+
+snippet tran
+class ${1:name}(object):
+    def __init__(self, ${2:args}):
+		self.$2 = $2
+		pass
+    def __call__(self, im, ${3:args}):
+		pass
+endsnippet
+
 
 snippet model
 import torch
