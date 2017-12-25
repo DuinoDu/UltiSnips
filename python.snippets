@@ -238,6 +238,28 @@ class ${1:dataset name}(data.Dataset):
 		# TODO: fetch [x, y]
         #return im, gt
 		pass
+
+
+if __name__ == '__main__':
+	import os
+	root = os.path.join(os.environ['HOME'], 'data/VOCdevkit')
+	ds = $1(root)
+	print("dataset len :", len(ds))
+
+	import IPython
+	IPython.embed()
+endsnippet
+
+
+snippet testds
+if __name__ == '__main__':
+	import os
+	root = os.path.join(os.environ['HOME'], 'data/VOCdevkit')
+	ds = ${1:dataset name}(root)
+	print("dataset len :", len(ds))
+
+	import IPython
+	IPython.embed()
 endsnippet
 
 
@@ -254,20 +276,10 @@ parser.add_argument('--shuffle', default=y, type=str2bool, help='shuffle data wh
 parser.add_argument('--pin_memory', default=y, type=str2bool, help='pin memory when loading data')
 endsnippet
 
-snippet testds
-if __name__ == '__main__':
-	import os
-	root = os.path.join(os.environ['HOME'], 'data/VOCdevkit')
-	ds = ${1:dataset name}(root)
-	print("dataset len :", len(ds))
-
-	import IPython
-	IPython.embed()
-endsnippet
 
 snippet addtran
 if self.transform != None:
-	im = self.transform
+	im = self.transform(im)
 if self.target_transform != None:
 	im, gt = self.target_transform(im, gt)
 endsnippet
@@ -279,6 +291,19 @@ class ${1:name}(object):
 		pass
     def __call__(self, im, ${3:args}):
 		pass
+endsnippet
+
+snippet compose
+class ${1:name}Augmentation(object):
+	def __init__(self, transforms):
+		self.transforms = [
+				# TODO: add more
+				ToTensor(),
+				]
+	def __call__(self, ${2:im}):
+		for t in self.transforms:
+			$2 = t($2)
+		return $2
 endsnippet
 
 
