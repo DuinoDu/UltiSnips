@@ -314,8 +314,11 @@ import torch.nn.init as init
 
 class ${1:name}(nn.Module):
 
-    def __init__(self):
+    def __init__(self${2:, n_classes}${3:, phase}${4:, pretrain=False}):
         super($1, self).__init__()
+		self.$2 = $2
+		self.$3 = $3
+
         # TODO: design model
 
     def forward(self, x):
@@ -326,14 +329,8 @@ class ${1:name}(nn.Module):
         pass
 
 if __name__ == "__main__":
-    # TODO: test model
-    pass
-endsnippet
-
-snippet testnet
-if __name__ == "__main__":
     from torch.autograd import Variable
-    net = ${1:Model}(2)
+    net = $1($2, $3, $4)
     x = Variable(torch.randn(1,3,1000,800))
     pred = net(x)
     print(pred.size())
@@ -341,6 +338,81 @@ if __name__ == "__main__":
     import IPython
     IPython.embed()
 endsnippet
+
+snippet testmodel
+if __name__ == "__main__":
+    from torch.autograd import Variable
+    net = ${1:Model}(2)
+    x = Variable(torch.randn(1,3,1000,800))
+    pred = net(x)
+    print("input size: ", x.size())
+    print("output size:", pred.size())
+
+    import IPython
+    IPython.embed()
+endsnippet
+
+
+snippet basenet
+	self.${1:base}_net = self._$1_net()
+
+def _$1_net(self):
+	pass
+endsnippet
+
+
+snippet initweight
+    self._init_weight()
+
+def _init_weight(self):
+    def weight_init(m):
+        if isinstance(m, nn.Conv2d):
+            init.${1:xavier_uniform}(m.weight.data)
+            if m.bias is not None:
+                m.bias.data.zero_()
+        elif isinstance(m, nn.BatchNorm2d):
+            m.weight.data.fill_(${2:1})
+            if m.bias is not None:
+                m.bias.data.zero_()
+    self.apply(weight_init)
+endsnippet
+
+snippet loadweight
+    if pretrain:
+        self._load_weight()
+
+from torchvision import models
+import os, glob
+def _load_weight(self, weight_file=None):
+
+    def _fetch_weight():
+        print('Fetching pretrained model...')
+        vgg16 = models.vgg16(pretrained=True)
+        model_file = os.path.join(os.environ['HOME'], '.torch/models', 'vgg16-*.pth')
+        return glob.glob(model_file)[0]
+
+    if weight_file == None:
+        weight_file = _fetch_weight()
+
+    _, ext = os.path.splitext(weight_file)
+    if ext not in ('.pkl', '.pth'):
+        raise ValueError, 'Sorry, only .pth and .pkl are supported, get {}'.format(weight_file)
+
+    source_dict = torch.load(weight_file)
+    # features -> base_net, remove
+    target_dict = {}
+    for key in source_dict.keys():
+        # TODO
+        pass
+    source_dict = target_dict 
+    # add
+    for (key, value) in self.state_dict().items():
+        if key not in target_dict.keys():
+            target_dict[key] = value
+    self.load_state_dict(target_dict)
+    print('Loading weight successfully!')
+endsnippet
+
 
 
 snippet lr
