@@ -194,7 +194,11 @@ if args.resume != "":
 	net.load_state_dicts(torch.load(args.resume))
 endsnippet
 
-snippet savegan
+snippet checkpoint
+parser.add_argument('--save_folder', default="weights", type=str, help='save weight pth path')
+if not os.path.exists(args.save_folder):
+    os.makedirs(args.save_folder)
+
 torch.save(net.state_dicts(), os.path.join(args.save_folder, 'weights.pth'))
 endsnippet
 
