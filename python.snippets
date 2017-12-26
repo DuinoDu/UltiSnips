@@ -199,7 +199,7 @@ parser.add_argument('--save_folder', default="weights", type=str, help='save wei
 if not os.path.exists(args.save_folder):
     os.makedirs(args.save_folder)
 
-torch.save(net.state_dicts(), os.path.join(args.save_folder, 'weights.pth'))
+torch.save(net.state_dict${1:s}(), os.path.join(args.save_folder, 'weights.pth'))
 endsnippet
 
 
