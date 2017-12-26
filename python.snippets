@@ -295,7 +295,7 @@ endsnippet
 
 snippet compose
 class ${1:name}Augmentation(object):
-	def __init__(self, transforms):
+	def __init__(self, ${3:args}):
 		self.transforms = [
 				# TODO: add more
 				ToTensor(),
@@ -414,28 +414,6 @@ def _load_weight(self, weight_file=None):
 endsnippet
 
 
-
-snippet lr
-import torch.optim.lr_scheduler as lr_scheduler
-lr_sche = lr_scheduler.StepLR(optimizer, step_size=30, gamma=args.gamma)
-# insert to train loop
-lr_sche.step()
-endsnippet
-
-
-snippet summary
-parser.add_argument('--tensorboard', default=1, type=int, help='Use tensorboard for loss visualization')
-if args.tensorboard:
-   from tensorboardX import SummaryWriter
-   writer = SummaryWriter()
-# insert to train loop
-if args.tensorboard:
-¦   writer.add_scalar('${1:train_loss/cls}', ${2:loss.data[0]}, ${3:iteration})
-write.close()
-endsnippet
-
-
-
 snippet initarg
 import argparse
 parser = argparse.ArgumentParser(description='${1:description of this script}')
@@ -456,6 +434,29 @@ optimizer = torch.optim.SGD(${1:model}.parameters(), args.lr,
                             momentum=args.momentum,
                             weight_decay=args.weight_decay)
 endsnippet
+
+
+snippet lr
+import torch.optim.lr_scheduler as lr_scheduler
+lr_sche = lr_scheduler.StepLR(optimizer, step_size=30, gamma=args.gamma)
+# insert to train loop
+lr_sche.step()
+endsnippet
+
+
+snippet summary
+parser.add_argument('--tensorboard', default=1, type=int, help='Use tensorboard for loss visualization')
+if args.tensorboard:
+   from tensorboardX import SummaryWriter
+   writer = SummaryWriter()
+# insert to train loop
+if args.tensorboard:
+¦   writer.add_scalar('${1:train_loss/cls}', ${2:loss.data[0]}, ${3:iteration})
+writer.close()
+endsnippet
+
+
+
 
 
 ####################################
