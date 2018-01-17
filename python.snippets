@@ -105,6 +105,25 @@ endsnippet
 
 ####################################
 #
+# PIL 
+#
+####################################
+
+snippet topil
+#from PIL import Image
+#import cv2
+${1:im} = Image.fromarray(cv2.cvtColor($1,cv2.COLOR_BGR2RGB))
+endsnippet
+
+snippet tocv2
+#from PIL import Image
+#import numpy as np
+${1:im} = np.array($1)[:,:,::-1].copy()
+endsnippet
+
+
+####################################
+#
 # cv2 
 #
 ####################################
@@ -128,17 +147,17 @@ if ch == 27: #ord('q')
 endsnippet
 
 snippet cv2rect
-cv2.rectangle(${1:img}, (${2:x1}, ${3:y1}), (${4:x2}, ${5:y2}), (0, 255, 0), 2)
+${1:img} = cv2.rectangle($1, (${2:x1}, ${3:y1}), (${4:x2}, ${5:y2}), (0, 255, 0), 2)
 endsnippet
 snippet cv2rect
-cv2.rectangle(${1:img}, (${2:pt}[0], $2[1]), ($2[2], $2[3]), (0, 255, 0), 2)
+${1:img} = cv2.rectangle($1, (${2:pt}[0], $2[1]), ($2[2], $2[3]), (0, 255, 0), 2)
 endsnippet
 
 snippet cv2circle
-cv2.circle(${1:img}, (${2:x0}, ${3:y0}), ${4:r}, (0, 255, 0), 2)
+${1:img} = cv2.circle($1, (${2:x0}, ${3:y0}), ${4:r}, (0, 255, 0), 2)
 endsnippet
 snippet cv2resize
-cv2.resize(${1:img}, (int($1.shape[1]/${2}), int($1.shape[0]/$2)))
+${1:img} = cv2.resize($1, (int($1.shape[1]/${2}), int($1.shape[0]/$2)))
 endsnippet
 
 snippet contour
