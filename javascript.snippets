@@ -1,0 +1,20 @@
+snippet args
+const args = require('yargs')
+	.option('input', {
+		alias: 'i',
+		default: '/tmp'
+	}).argv;
+endsnippet
+
+#########
+# react #
+#########
+snippet rc
+class ${1:ClassName} extends React.Component {
+	render(){
+		return (
+			${2:<div></div>}
+		);
+	};
+}
+endsnippet
