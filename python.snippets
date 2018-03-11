@@ -38,7 +38,11 @@ for index, obj in enumerate(objs):
 endsnippet
 
 snippet sh
-import commands
+try:
+    import commands
+except Exception as e:
+    import subprocess as commands
+
 cmd = '$1'
 (status, output) = commands.getstatusoutput(cmd)
 output = output.split('\n')
