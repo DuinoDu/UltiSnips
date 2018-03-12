@@ -38,7 +38,11 @@ for index, obj in enumerate(objs):
 endsnippet
 
 snippet sh
-import commands
+try:
+    import commands
+except Exception as e:
+    import subprocess as commands
+
 cmd = '$1'
 (status, output) = commands.getstatusoutput(cmd)
 output = output.split('\n')
@@ -771,4 +775,17 @@ endsnippet
 
 snippet skip
 @unittest.skip("tested")
+endsnippet
+
+snippet timer
+#import utils
+timer = utils.Timer()
+timer.start()
+for i in range(1):
+    # fun1
+    timer.tictoc('${1:name}')
+    # fun2
+    timer.tictoc('${2:name}')
+timer.end()
+timer.log(show=True)
 endsnippet
