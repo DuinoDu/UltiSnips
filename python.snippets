@@ -196,8 +196,8 @@ endsnippet
 #
 ####################################
 
-snippet totorch
-${1:tensor} = torch.from_numpy(${2:ndarray})
+snippet totensor
+${1:tensor} = torch.from_numpy(${2:ndarray}.transpose((2, 0, 1))).float().div(255)
 endsnippet
 
 snippet tonumpy
