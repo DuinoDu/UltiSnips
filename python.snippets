@@ -747,10 +747,11 @@ endsnippet
 ####################################
 
 snippet tic
+import time
 t1 = time.time()
 ${1:add your function}
 t2 = time.time()    
-print "${2:msg to display}: {}".format(t2-t1)
+print("%.2f ms" % ((t2-t1)*1000))
 endsnippet
 
 
