@@ -34,6 +34,8 @@ for index, obj in enumerate(objs):
     x1 = int(bbox.find('xmin').text) - 1
     y1 = int(bbox.find('ymin').text) - 1
     x2 = int(bbox.find('xmax').text) - 1
+    elif args.cuda:
+        net = net.cuda()
     y2 = int(bbox.find('ymax').text) - 1
 endsnippet
 
@@ -233,6 +235,10 @@ import os
 os.environ['CUDA_VISIBLE_DIVICES'] = str(args.gpuID)
 if args.cuda:
 	torch.cuda.set_device(args.gpuID)
+endsnippet
+snippet multigpu
+${1:net} = nn.DataParallel($1).cuda()
+
 endsnippet
 
 
