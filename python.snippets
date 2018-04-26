@@ -536,7 +536,7 @@ endsnippet
 
 snippet incgluon
 import mxnet as mx
-import mxnet.ndarray as F
+import mxnet.ndarray as nd
 import mxnet.gluon as gluon
 import mxnet.gluon.nn as nn
 import mxnet.autograd as autograd
@@ -559,7 +559,7 @@ class ${1:BlockName}(nn.HybridSequential):
 	def __init__(self, ${2}, **kwargs):
 		super($1, self).__init__(**kwargs)
 
-	def hybrid_forward(self, x):
+	def hybrid_forward(self, F, x):
 		${3:#TODO}
 		return x
 endsnippet
