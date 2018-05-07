@@ -1,7 +1,3 @@
-# List:
-# isvar, isdir 
-#
-
 # readfile
 snippet isvar
 if [ ! -n "\$1" ];then
@@ -17,8 +13,17 @@ if [ ! -d ${1} ];then
 fi
 endsnippet
 
+
 snippet fordir
 for f in ${1:`ls *.zip`};do
 	${2:unzip $f}
 done
+endsnippet
+
+
+snippet log
+LOG_DIR=${1:.}
+LOG_File=${2:prefix}_\`date +%Y-%m-%d_%H:%M:%S\`.log
+exec > >(tee -i $LOG_DIR/$LOG_File)
+exec 2>&1
 endsnippet
