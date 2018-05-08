@@ -581,6 +581,10 @@ snippet gbn
 nn.BatchNorm(scale=True)
 endsnippet
 
+snippet grelu
+nn.Activation('${1:relu}')
+endsnippet
+
 snippet tosym
 sym = ${1:net}(mx.sym.var('data'))
 endsnippet
