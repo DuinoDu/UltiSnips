@@ -555,7 +555,7 @@ with self.name_scope():
 endsnippet
 
 snippet hb "gluon.nn.HybridBlock"
-class ${1:BlockName}(nn.HybridSequential):
+class ${1:BlockName}(nn.HybridBlock):
 	def __init__(self, ${2}, **kwargs):
 		super($1, self).__init__(**kwargs)
 
