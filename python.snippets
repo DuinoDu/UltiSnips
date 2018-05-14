@@ -192,6 +192,41 @@ _, contours, hierarchy = cv2.findContours(im_thresh, cv2.RETR_TREE ,cv2.CHAIN_AP
 cv2.drawContours(im, contours,-1,(0,255,0),1)
 endsnippet
 
+snippet cv2fps
+#import time
+start  = time.time()
+# process one frame
+end = time.time()
+fps = 1./(end - start)
+print("FPS: ", fps)
+endsnippet
+
+snippet subprocess
+import multiprocessing as mp
+def ${1:subprocess}_loop(in_q, out_q):
+    while True:
+        im = in_q.get()
+        # process
+        ret = im.shape
+        out_q.put(ret)
+
+# init process
+in_q = mp.Queue()
+out_q = mp.Queue()
+$1_process = mp.Process(target=$1_loop, args=(in_q, out_q))
+$1_process.start()
+
+# pass data in your program
+# send
+in_q.put(data)
+# get
+ret = []
+try:
+    ret = out_q.get(False)
+except Exception as e:
+    pass
+endsnippet
+
 
 ####################################
 #
