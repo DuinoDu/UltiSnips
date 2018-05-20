@@ -27,3 +27,17 @@ LOG_File=${2:prefix}_\`date +%Y-%m-%d_%H:%M:%S\`.log
 exec > >(tee -i $LOG_DIR/$LOG_File)
 exec 2>&1
 endsnippet
+
+
+snippet checkcommand
+if hash ${1:command} 2>/dev/null;then
+    echo "Find $1 : "`which $1`
+else
+    echo '$1 not found, please install $1 first.'
+    exit
+fi
+endsnippet
+
+snippet checkcommand
+type ${1:command} > /dev/null 2>&1 || echo >&2 "$1 not exists"
+endsnippet
