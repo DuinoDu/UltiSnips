@@ -393,49 +393,26 @@ class ${1:name}Augmentation(object):
 		return $2
 endsnippet
 
-snippet model
-import torch
-import torch.nn as nn
-import torch.nn.init as init
-
+snippet module
 class ${1:name}(nn.Module):
 
-    def __init__(self${2:, n_classes}${3:, phase}${4:, pretrain=False}):
+    def __init__(self):
         super($1, self).__init__()
-		self.$2 = $2
-		self.$3 = $3
-
-        # TODO: design model
+        # TODO: init module
 
     def forward(self, x):
-        # TODO: build model
+        # TODO: build module
         return x
 
-    def init_weight(self, weight_file=None):
-        pass
-
-if __name__ == "__main__":
-    from torch.autograd import Variable
-    net = $1($2, $3, $4)
-    x = Variable(torch.randn(1,3,1000,800))
-    pred = net(x)
-    print(pred.size())
-
-    import IPython
-    IPython.embed()
 endsnippet
 
-snippet testmodel
+snippet testmodule
 if __name__ == "__main__":
-    from torch.autograd import Variable
     net = ${1:Model}(2)
-    x = Variable(torch.randn(1,3,1000,800))
+    x = torch.randn(1,3,1000,800)
     pred = net(x)
     print("input size: ", x.size())
     print("output size:", pred.size())
-
-    import IPython
-    IPython.embed()
 endsnippet
 
 snippet basenet
