@@ -704,6 +704,43 @@ endsnippet
 #
 ####################################
 
+snippet initcfg
+from easydict import EasyDict as edict
+import os
+
+HOME = os.path.expanduser("~")
+cfg = edict()
+
+# dataset
+cfg.voc_root = os.path.join(HOME, "data/VOCdevkit/")
+cfg.coco_root = os.path.join(HOME, "data/coco/") 
+cfg.num_classes = 21
+
+# model
+cfg.means = (104, 117, 123)
+
+# loss
+
+# optimizer
+cfg.lr =  
+cfg.momentum = 
+cfg.weight_decay = 
+cfg.gamma =
+cfg.num_epochs = 
+cfg.batch_size = 
+
+# test
+
+# others
+cfg.cuda = True
+cfg.gpuID = '1'
+cfg.num_workers = 2
+cfg.resume = None
+cfg.tensorboard = False
+cfg.save_folder = 'output'
+cfg.eval_every_epoch = False
+endsnippet
+
 snippet tool
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
