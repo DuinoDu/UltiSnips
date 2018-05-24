@@ -260,10 +260,8 @@ endsnippet
 snippet inctorch
 import torch
 import torch.nn as nn
-import torch.backends.cudnn as cudnn
 import torch.nn.init as init
-from torch.autograd import Variable
-import torch.utils.data as data
+import torch.backends.cudnn as cudnn
 endsnippet
 
 snippet loadgan
@@ -272,77 +270,17 @@ if args.resume != "":
 	net.load_state_dicts(torch.load(args.resume))
 endsnippet
 
-snippet checkpoint
-parser.add_argument('--save_folder', default="weights", type=str, help='save weight pth path')
-if not os.path.exists(args.save_folder):
-    os.makedirs(args.save_folder)
-
-torch.save(net.state_dict${1:s}(), os.path.join(args.save_folder, 'weights.pth'))
-endsnippet
 
 snippet setgpu
 parser.add_argument('--cuda', default=1, type=int, help='if using cuda')
 parser.add_argument('--gpuID', default=0, type=int, help='Use which gpu to train model')
 import os
 os.environ['CUDA_VISIBLE_DIVICES'] = str(args.gpuID)
-if args.cuda:
-	torch.cuda.set_device(args.gpuID)
+device = torch.device('cuda' if args.cuda else 'cpu')
 endsnippet
+
 snippet multigpu
 ${1:net} = nn.DataParallel($1).cuda()
-
-endsnippet
-
-snippet dataset
-import torch.utils.data as data
-
-class ${1:dataset name}(data.Dataset):
-    """${2: description}
-
-    Arguments:
-        root (str): root of dataset.
-		split (str): 'train' | 'val' | 'trainval'
-    """
-
-    def __init__(self, root, split, transform=None, target_transform=None):
-        self.root = root
-        self.image_set = split
-        self.transform = transform # data-aug
-		self.target_transform = target_transform
-        self.name = ${3:dataset_name}
-        self._imgfile = ${4:image path}
-        self._annofile = ${5:annotation file}
-        self.ids = list()
-		# TODO: add self.ids
-
-    def __len__(self):
-        return len(self.ids)
-
-    def __getitem__(self, index):
-		# TODO: fetch [x, y]
-        #return im, gt
-		pass
-
-
-if __name__ == '__main__':
-	import os
-	root = os.path.join(os.environ['HOME'], 'data/VOCdevkit')
-	ds = $1(root)
-	print("dataset len :", len(ds))
-
-	import IPython
-	IPython.embed()
-endsnippet
-
-snippet testds
-if __name__ == '__main__':
-	import os
-	root = os.path.join(os.environ['HOME'], 'data/VOCdevkit')
-	ds = ${1:dataset name}(root)
-	print("dataset len :", len(ds))
-
-	import IPython
-	IPython.embed()
 endsnippet
 
 snippet dataloader
@@ -355,7 +293,6 @@ parser.add_argument('--shuffle', default='y', type=str2bool, help='shuffle data 
 parser.add_argument('--pin_memory', default='y', type=str2bool, help='pin memory when loading data')
 parser.add_argument('--num_epochs', default=10, type=int, help='num of epochs')
 
-
 dataset = ${1:dataset_name}(${2:args})
 ${3:train|val}loader = data.DataLoader(dataset, args.batch_size, num_workers=args.num_workers, shuffle=args.shuffle, pin_memory=args.pin_memory)
 
@@ -364,12 +301,14 @@ for epoch in range(args.num_epochs):
 		pass
 endsnippet
 
+
 snippet addtran
 if self.transform != None:
 	im = self.transform(im)
 if self.target_transform != None:
 	im, gt = self.target_transform(im, gt)
 endsnippet
+
 
 snippet tran
 class ${1:name}(object):
@@ -379,6 +318,7 @@ class ${1:name}(object):
     def __call__(self, im, ${3:args}):
 		pass
 endsnippet
+
 
 snippet compose
 class ${1:name}Augmentation(object):
@@ -392,6 +332,7 @@ class ${1:name}Augmentation(object):
 			$2 = t($2)
 		return $2
 endsnippet
+
 
 snippet module
 class ${1:name}(nn.Module):
@@ -415,12 +356,6 @@ if __name__ == "__main__":
     print("output size:", pred.size())
 endsnippet
 
-snippet basenet
-	self.${1:base}_net = self._$1_net()
-
-def _$1_net(self):
-	pass
-endsnippet
 
 snippet initweight
     self._init_weight()
@@ -555,48 +490,6 @@ ${3:output} = mx.symbol.Pooling(name='${1:name}', data=${2:input}, pooling_conve
                                 pad=(${4:0}, $4), kernel=(${5:3}, $5), stride=(${6:2}, $6), pool_type='${7:max}')
 endsnippet
 
-snippet incgluon
-import mxnet as mx
-import mxnet.ndarray as nd
-import mxnet.gluon as gluon
-import mxnet.gluon.nn as nn
-import mxnet.autograd as autograd
-endsnippet
-
-snippet hs "gluon.nn.HybridSequential"
-${1:out} = nn.HybridSequential(${2:**kwargs})
-with $1.name_scope():
-	$1.add($3)
-endsnippet
-
-snippet hs2 "gluon.nn.HybridSequential"
-with self.name_scope():
-	${1:out} = nn.HybridSequential()
-	$1.add($2)
-endsnippet
-
-snippet hb "gluon.nn.HybridBlock"
-class ${1:BlockName}(nn.HybridBlock):
-	def __init__(self, ${2}, **kwargs):
-		super($1, self).__init__(**kwargs)
-
-	def hybrid_forward(self, F, x):
-		${3:#TODO}
-		return x
-endsnippet
-
-snippet gconv
-nn.Conv2D(${1:out_channels}, ${2:kernel_size}, strides=${3}, padding=${4:1}, use_bias=${5:False})
-endsnippet
-
-snippet gbn
-nn.BatchNorm(scale=True)
-endsnippet
-
-snippet grelu
-nn.Activation('${1:relu}')
-endsnippet
-
 snippet tosym
 sym = ${1:net}(mx.sym.var('data'))
 endsnippet
@@ -669,6 +562,66 @@ class ${1:CustomLoader}(mx.io.DataIter):
                                    provide_label=self.provide_label)
         else:
             raise StopIteration
+endsnippet
+
+
+####################################
+#
+# gluon
+#
+####################################
+snippet incgluon
+import mxnet as mx
+import mxnet.ndarray as nd
+import mxnet.gluon as gluon
+import mxnet.gluon.nn as nn
+import mxnet.autograd as autograd
+endsnippet
+
+snippet hs "gluon.nn.HybridSequential"
+${1:out} = nn.HybridSequential(${2:**kwargs})
+with $1.name_scope():
+	$1.add($3)
+endsnippet
+
+snippet hs2 "gluon.nn.HybridSequential"
+with self.name_scope():
+	${1:out} = nn.HybridSequential()
+	$1.add($2)
+endsnippet
+
+snippet hb "gluon.nn.HybridBlock"
+class ${1:BlockName}(nn.HybridBlock):
+	def __init__(self, ${2}, **kwargs):
+		super($1, self).__init__(**kwargs)
+
+	def hybrid_forward(self, F, x):
+		${3:#TODO}
+		return x
+endsnippet
+
+snippet gconv
+nn.Conv2D(${1:out_channels}, ${2:kernel_size}, strides=${3}, padding=${4:1}, use_bias=${5:False})
+endsnippet
+
+snippet tconv
+nn.Conv2d(${1:in_channels}, ${2:out_channels}, kernel_size=${3:3}, padding=${4:1})
+endsnippet
+
+snippet gbn
+nn.BatchNorm(scale=True)
+endsnippet
+
+snippet tbn
+nn.BatchNorm2d(${1::in_channels})
+endsnippet
+
+snippet grelu
+nn.Activation('${1:relu}')
+endsnippet
+
+snippet trelu
+nn.ReLU()
 endsnippet
 
 
