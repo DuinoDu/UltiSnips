@@ -201,7 +201,17 @@ fps = 1./(end - start)
 print("FPS: ", fps)
 endsnippet
 
-snippet subprocess
+snippet tracker
+tracker = cv2.TrackerKCF_create()
+
+roi = cv2.selectROI("image", frame, True, False)
+tracker.init(frame, roi) # roi:[x1, y1, w, h]
+
+while True:
+	isfound, roi = tracker.update(frame)
+endsnippet
+
+snippet mp 
 import multiprocessing as mp
 def ${1:subprocess}_loop(in_q, out_q):
     while True:
