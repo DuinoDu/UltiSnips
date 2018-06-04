@@ -1,0 +1,527 @@
+####################################
+#
+# common
+#
+####################################
+snippet initarg
+import argparse
+parser = argparse.ArgumentParser(description='${1:description of this script}')
+args = parser.parse_args()
+endsnippet
+
+snippet addarg
+parser.add_argument('--${1:name}', default=${2}, type=${3:str}, help='${4:description}')
+endsnippet
+
+snippet initcfg
+from easydict import EasyDict as edict
+import os
+
+HOME = os.path.expanduser("~")
+cfg = edict()
+
+# dataset
+cfg.root = os.path.join(HOME, "data/VOCdevkit/")
+cfg.num_classes = 21
+
+# model
+cfg.means = (104, 117, 123)
+
+# loss
+
+# optimizer
+cfg.lr =  
+cfg.momentum = 
+cfg.weight_decay = 
+cfg.gamma =
+cfg.start_epoch = 
+cfg.num_epochs = 
+cfg.batch_size = 
+
+# test
+
+# others
+cfg.cuda = True
+cfg.gpuID = '1'
+cfg.num_workers = 2
+cfg.resume = None
+cfg.tensorboard = False
+cfg.save_folder = 'output'
+cfg.weight_prefix = 'ssd300_0712_'
+cfg.final_name = 'ssd300_voc_final.pth'
+cfg.eval_on_epoch = 10
+cfg.save_on_epoch = 10
+endsnippet
+
+
+####################################
+#
+# numpy
+#
+####################################
+snippet tohwc
+${1:ndarray} = np.transpose(${2:ndarray}, (1,2,0))
+endsnippet
+
+snippet tochw
+${1:ndarray} = np.transpose(${2:ndarray}, (2,0,1))
+endsnippet
+
+snippet npconcat
+np.concatenate((${1:a}, ${2:b}), axis=${3:0})
+endsnippet
+
+snippet npunsqu
+${1:a}[np.newaxis, :]
+#np.expand_dims(${1:a}, axis=${2:0})
+endsnippet
+
+
+####################################
+#
+# pytorch
+#
+####################################
+snippet totensor
+${1:tensor} = torch.from_numpy(${2:ndarray}.transpose((2, 0, 1))).float().div(255)
+endsnippet
+
+snippet tonumpy
+${1:ndarray} = torch.cpu().numpy(${2:tensor})
+endsnippet
+
+snippet inctorch
+import torch
+import torch.nn as nn
+import torch.nn.init as init
+import torch.backends.cudnn as cudnn
+endsnippet
+
+snippet setgpu
+parser.add_argument('--cuda', default=1, type=int, help='if using cuda')
+parser.add_argument('--gpuID', default=0, type=int, help='Use which gpu to train model')
+import os
+os.environ['CUDA_VISIBLE_DIVICES'] = str(args.gpuID)
+device = torch.device('cuda' if args.cuda else 'cpu')
+endsnippet
+
+snippet multigpu
+${1:net} = nn.DataParallel($1).cuda()
+endsnippet
+
+snippet torch_dataset
+class AnnotationTransform(object):
+    """
+    Load annotation from file to loss input
+    """
+    def __init__(self):
+        pass
+
+
+    def __call__(self, target):
+        res = []
+        return res 
+
+
+class ${1:Name}(data.Dataset):
+    """
+    TODO
+    """
+    def __init__(self, root, phase, transform=None, target_transform=AnnotationTransform(),
+                 dataset_name='$1'):
+        self.root = cfg.root
+        self.phase = phase
+        self.transform = transform
+        self.target_transform = target_transform
+        self.name = dataset_name
+        # TODO: set image and anno path
+        #self._annopath = os.path.join('%s', 'Annotations', '%s.xml')
+        #self._imgpath = os.path.join('%s', 'JPEGImages', '%s.jpg')
+        #self.ids = list()
+        #for (year, name) in image_sets:
+        #    rootpath = os.path.join(self.root, 'VOC' + year)
+        #    for line in open(os.path.join(rootpath, 'ImageSets', 'Main', name + '.txt')):
+        #        self.ids.append((rootpath, line.strip()))
+
+
+    def __len__(self):
+        return len(self.ids)
+
+
+    def __getitem__(self, index):
+        # TODO
+        return im, gt
+
+
+def custom_collate(batch):
+    """Custom collate fn for dealing with batches of images that have a different
+    number of associated object annotations (bounding boxes).
+
+    [TODO]: use default collate if not need.
+    """
+    imgs = []
+    targets = []
+    # TODO
+    return torch.stack(imgs, 0), targets
+
+
+def make_dataloader(cfg, root, phase, augment):
+    root = cfg.root
+    batch_size = cfg.batch_size
+    num_workers = cfg.num_workers
+    shuffle = cfg.shuffle if phase == 'train' else False
+    pin_memory = cfg.pin_memory
+
+    dataset = $1(root, image_sets, augment, AnnotationTransform())
+    return data.DataLoader(dataset, 
+                           batch_size, 
+                           num_workers=num_workers,
+                           shuffle=shuffle, 
+                           pin_memory=pin_memory,
+                           collate_fn=custom_collate)
+endsnippet
+
+snippet compose
+class ${1:name}Augmentation(object):
+	def __init__(self, ${3:args}):
+		self.transforms = [
+				# TODO: add more
+				ToTensor(),
+				]
+	def __call__(self, ${2:im}):
+		for t in self.transforms:
+			$2 = t($2)
+		return $2
+endsnippet
+
+snippet tran
+class ${1:name}(object):
+    def __init__(self, ${2:args}):
+		self.$2 = $2
+		pass
+    def __call__(self, im, ${3:args}):
+		pass
+endsnippet
+
+snippet module
+from detect import Detect
+class ${1:name}(nn.Module):
+
+    def __init__(self, cfg, phase):
+        super($1, self).__init__()
+		self.cfg = cfg
+		self.phase = phase
+		if self.phase == 'test':
+			self.detect = Detect()
+        # TODO: init module
+
+    def forward(self, x):
+        # TODO: build module
+
+		if self.phase == 'train':
+			return x
+		else self.phase == 'test':
+			return self.detect(x)
+endsnippet
+
+snippet testmodule
+net = ${1:Model}(2)
+x = torch.randn(1,3,1000,800)
+pred = net(x)
+print("input size: ", x.size())
+print("output size:", pred.size())
+endsnippet
+
+snippet initweight
+    self._init_weight()
+
+def _init_weight(self):
+    def weight_init(m):
+        if isinstance(m, nn.Conv2d):
+            init.${1:xavier_uniform}(m.weight.data)
+            if m.bias is not None:
+                m.bias.data.zero_()
+        elif isinstance(m, nn.BatchNorm2d):
+            m.weight.data.fill_(${2:1})
+            if m.bias is not None:
+                m.bias.data.zero_()
+    self.apply(weight_init)
+endsnippet
+
+snippet loadweight
+    if pretrain:
+        self._load_weight()
+
+from torchvision import models
+import os, glob
+def _load_weight(self, weight_file=None):
+    source_dict = torch.load(weight_file)
+    source_dict = target_dict 
+    self.load_state_dict(target_dict)
+    print('Loading weight successfully!')
+endsnippet
+
+snippet tconv
+nn.Conv2d(${1:in_channels}, ${2:out_channels}, kernel_size=${3:3}, padding=${4:1})
+endsnippet
+
+snippet tbn
+nn.BatchNorm2d(${1::in_channels})
+endsnippet
+
+snippet trelu
+nn.ReLU()
+endsnippet
+
+####################################
+#
+# mxnet
+#
+####################################
+snippet testsym
+data = mx.sym.Variable(name='data')
+data_shape = (1, 3, 256, 256)
+data = mx.sym.Variable(name='data')
+net_symbol = ${1:build_net}(data)
+output_shape = net_symbol.infer_shape(data=data_shape)
+print('network output shape:', output_shape[1])
+endsnippet
+
+
+snippet symconv 
+${3:output} = mx.symbol.Convolution(name='${1:name}', data=${2:input}, num_filter=${4:64}, pad=(${5:1}, $5), 
+                                    kernel=(${6:3}, $6), stride=(${7:1}, $7), no_bias=${8:True})
+endsnippet
+
+snippet symbn
+${3:output} = mx.symbol.BatchNorm(name='${1:name}', data=${2:input}, use_global_stats=True, fix_gamma=False, 
+                                  eps=${4:eps})
+endsnippet
+
+snippet symrelu
+${3:output} = mx.symbol.Activation(name='${1:name}', data=${2:input}, act_type='relu')
+endsnippet
+
+snippet sympool
+${3:output} = mx.symbol.Pooling(name='${1:name}', data=${2:input}, pooling_convention='full', 
+                                pad=(${4:0}, $4), kernel=(${5:3}, $5), stride=(${6:2}, $6), pool_type='${7:max}')
+endsnippet
+
+snippet tosym
+sym = ${1:net}(mx.sym.var('data'))
+endsnippet
+
+
+snippet mxviz
+mx.viz.plot_network(symbol=${1:symbol}, shape={'data':${2:(1,3,224,224)}}, title='symbol', save_format='jpg').render()
+endsnippet
+
+snippet mx_dataset
+import numpy as np
+import mxnet as mx
+
+class ${1:CustomLoader}(mx.io.DataIter):
+    def __init__(self, batch_size=1, ctx=None):
+        super($1, self).__init__()
+
+        # custom params
+        self.batch_size = batch_size
+        self.ctx = ctx
+
+        # size and index
+        self.size = ${2:dataset size}
+        self.index = np.arange(self.size)
+
+        # data and label
+		# change to your dataset
+        self.data_name = ['data']
+        self.label_name = ['label', 'bbox_target', 'bbox_weight']
+
+        # status variable
+        self.cur = 0
+        self.batch = None
+        self.data = None
+        self.label = None
+
+        # get first batch to fill in provide_data and provide_label
+        self.reset()
+        self.get_batch()
+
+    def reset(self):
+        self.cur = 0
+
+    def get_batch(self):
+        # put data and label to self.data and self.label
+        # [B, C, H, W]
+        self.data = [mx.nd.zeros((1, 3, 256, 256)) for key in self.data_name]
+        self.label = [mx.nd.zeros((10,10)) for key in self.label_name]
+
+    @property
+    def provide_data(self):
+        return [(k, v.shape) for k, v in zip(self.data_name, self.data)]
+
+    @property
+    def provide_label(self):
+        return [(k, v.shape) for k, v in zip(self.label_name, self.label)]
+
+    def next(self):
+        pad = self.cur + self.batch_size - self.size \
+                if (self.cur + self.batch_size > self.size) else 0
+        if self.cur + self.batch_size <= self.size:
+            self.get_batch()
+            self.cur += self.batch_size
+            index = self.cur / self.batch_size
+            return mx.io.DataBatch(data=self.data,
+                                   label=self.label,
+                                   pad=pad,
+                                   index=index,
+                                   provide_data=self.provide_data,
+                                   provide_label=self.provide_label)
+        else:
+            raise StopIteration
+endsnippet
+
+
+####################################
+#
+# gluon
+#
+####################################
+snippet incgluon
+import mxnet as mx
+import mxnet.ndarray as nd
+import mxnet.gluon as gluon
+import mxnet.gluon.nn as nn
+import mxnet.autograd as autograd
+endsnippet
+
+snippet hs "gluon.nn.HybridSequential"
+${1:out} = nn.HybridSequential(${2:**kwargs})
+with $1.name_scope():
+	$1.add($3)
+endsnippet
+
+snippet hs2 "gluon.nn.HybridSequential"
+with self.name_scope():
+	${1:out} = nn.HybridSequential()
+	$1.add($2)
+endsnippet
+
+snippet hb "gluon.nn.HybridBlock"
+class ${1:BlockName}(nn.HybridBlock):
+	def __init__(self, ${2}, **kwargs):
+		super($1, self).__init__(**kwargs)
+
+	def hybrid_forward(self, F, x):
+		${3:#TODO}
+		return x
+endsnippet
+
+snippet testblock
+x = nd.random_normal(shape=(${1:1, 3, 224, 224}))
+net = ${2:Net}()
+net.collect_params().initialize()
+y = net(x)
+print(y.shape)
+endsnippet
+
+snippet gconv
+nn.Conv2D(${1:out_channels}, ${2:kernel_size}, strides=${3}, padding=${4:1}, use_bias=${5:False})
+endsnippet
+
+snippet gbn
+nn.BatchNorm(scale=True)
+endsnippet
+
+snippet grelu
+nn.Activation('${1:relu}')
+endsnippet
+
+
+####################################
+#
+# tensorflow 
+#
+####################################
+snippet place
+tf.placeholder(tf.float32, shape=[${1}], name='${2}')
+endsnippet
+snippet var
+tf.Variable(${1})
+endsnippet
+snippet sess
+sess = tf.InteractiveSession()
+endsnippet
+snippet tfadd
+tf.add(${1})
+endsnippet
+snippet tfmul
+tf.matmul(${1})
+endsnippet
+snippet tfrand
+tf.random_normal([${1:h}, ${2:w}, ${3:in}, ${4:out}])
+endsnippet
+snippet tfmean
+tf.reduce_mean(${1})
+endsnippet
+snippet tfcast
+tf.cast(${1}, ${2:tf.float32})
+endsnippet
+snippet tfequal
+tf.equal(${1})
+endsnippet
+snippet tfargmax
+tf.argmax(${1}, ${2:dimension})
+endsnippet
+snippet tfopti
+tf.train.GradientDescentOptimizer(learning_rate=${1:learning_rate}).minimize(${2:cost_op})
+endsnippet
+snippet tfopti
+tf.train.AdamOptimizer(learning_rate=${1:learning_rate}).minimize(${2:cost_op})
+endsnippet
+snippet tfrun
+feed_dict = {x:${1}}
+sess.run(${1:graph_name}, feed_dict=feed_dict)
+endsnippet
+snippet setgpu
+import os
+os.environ['CUDA_VISIBLE_DIVICES'] = "${1:gpuID}"
+config = tf.ConfigProto(device_count={'GPU':$1})
+config.gpu_options.per_process_gpu_memory_fraction = ${2:0.5}
+#with tf.Session(config=config) as sess:
+endsnippet
+snippet closelog
+import os
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '1' 
+endsnippet
+snippet testnet
+sess = tf.InteractiveSession(config=config)
+x = tf.placeholder(tf.float32, shape=[${1:input shape}], name='x')
+net = model(x)
+tl.layers.initialize_global_variables(sess)
+
+net.print_params()
+net.print_layers()
+
+feed_dict = {x: np.random.rand($1)}
+out = sess.run(net.outputs, feed_dict=feed_dict)
+print(out.shape)
+endsnippet
+
+####################################
+#
+# tensorlayer
+#
+####################################
+snippet tlinput
+$3 = tl.layers.InputLayer(${1:x}, name='${2:input}')
+endsnippet
+snippet tlconv
+$4 = tl.layers.Conv2d(${1:x}, ${2:out_channels}, (3,3), act=tf.nn.relu, name='${3:conv}')
+endsnippet
+snippet tlpool
+$3 = tl.layers.MaxPool2d(${1:x}, (2,2), name='${2:pool}')
+endsnippet
+snippet tlinit
+tl.layers.initialize_global_variables(sess)
+endsnippet
