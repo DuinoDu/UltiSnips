@@ -1,5 +1,46 @@
 ####################################
 #
+# numpy
+#
+####################################
+snippet tohwc
+${1:ndarray} = np.transpose(${2:ndarray}, (1,2,0))
+endsnippet
+
+snippet tochw
+${1:ndarray} = np.transpose(${2:ndarray}, (2,0,1))
+endsnippet
+
+snippet npconcat
+np.concatenate((${1:a}, ${2:b}), axis=${3:0})
+endsnippet
+
+snippet npunsqu
+${1:a}[np.newaxis, :]
+#np.expand_dims(${1:a}, axis=${2:0})
+endsnippet
+
+snippet totensor
+${1:tensor} = torch.from_numpy(${2:ndarray}.transpose((2, 0, 1))).float().div(255)
+endsnippet
+
+snippet tonumpy
+${1:ndarray} = torch.cpu().numpy(${2:tensor})
+endsnippet
+
+snippet shownp
+from PIL import Image
+Image.fromarray(${1:arr}).show()
+endsnippet
+
+snippet savepil
+from PIL import Image
+Image.fromarray(${1:arr}).save(${2:filename})
+endsnippet
+
+
+####################################
+#
 # common
 #
 ####################################
@@ -56,39 +97,9 @@ endsnippet
 
 ####################################
 #
-# numpy
-#
-####################################
-snippet tohwc
-${1:ndarray} = np.transpose(${2:ndarray}, (1,2,0))
-endsnippet
-
-snippet tochw
-${1:ndarray} = np.transpose(${2:ndarray}, (2,0,1))
-endsnippet
-
-snippet npconcat
-np.concatenate((${1:a}, ${2:b}), axis=${3:0})
-endsnippet
-
-snippet npunsqu
-${1:a}[np.newaxis, :]
-#np.expand_dims(${1:a}, axis=${2:0})
-endsnippet
-
-
-####################################
-#
 # pytorch
 #
 ####################################
-snippet totensor
-${1:tensor} = torch.from_numpy(${2:ndarray}.transpose((2, 0, 1))).float().div(255)
-endsnippet
-
-snippet tonumpy
-${1:ndarray} = torch.cpu().numpy(${2:tensor})
-endsnippet
 
 snippet inctorch
 import torch
