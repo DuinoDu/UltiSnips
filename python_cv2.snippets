@@ -1,0 +1,127 @@
+####################################
+#
+# cv2 
+#
+####################################
+
+snippet togray
+${2:gray} = cv2.cvtColor(${1:im}, cv2.COLOR_BGR2GRAY)
+endsnippet
+
+snippet threshold
+_, ${2:im_thresh} = cv2.threshold(${1:gray}, 177, 255, cv2.THRESH_BINARY)
+endsnippet
+
+snippet camera
+cap = cv2.VideoCapture(0)
+while True:
+    ok, f = cap.read()
+    if ok:    
+        cv2.imshow("image", f)
+    if cv2.waitKey(20) == 27:
+        break
+cv2.destroyAllWindows()
+endsnippet
+
+snippet esc
+cv2.imshow('img', ${1:img})
+ch = cv2.waitKey(0) & 0xff
+if ch == 27: #ord('q')
+	break
+endsnippet
+
+snippet cv2rect
+${1:img} = cv2.rectangle($1, (${2:x1}, ${3:y1}), (${4:x2}, ${5:y2}), (0, 255, 0), 2)
+endsnippet
+snippet cv2rect
+${1:img} = cv2.rectangle($1, (${2:pt}[0], $2[1]), ($2[2], $2[3]), (0, 255, 0), 2)
+endsnippet
+snippet cv2circle
+${1:img} = cv2.circle($1, (${2:x0}, ${3:y0}), ${4:r}, (0, 255, 0), 2)
+endsnippet
+snippet cv2resize
+${1:img} = cv2.resize($1, (int($1.shape[1]/${2}), int($1.shape[0]/$2)))
+endsnippet
+snippet cv2text
+${1:img} = cv2.putText($1, ${2:str},(${3:x}, ${4:y}),cv2.FONT_HERSHEY_COMPLEX, 1, (0,0,255), 2)
+endsnippet
+snippet cv2line
+${1:img} = cv2.line($1, (${2:x1}, ${3:y1}), (${4:x2}, ${5:y2}), (0, 255, 0), 2)
+endsnippet
+
+snippet contour
+im = cv2.imread(${1:imgpath})
+im_gray = cv2.cvtColor(im, cv2.COLOR_BGR2GRAY)
+_, im_thresh = cv2.threshold(im_gray, 177, 255, cv2.THRESH_BINARY)
+_, contours, hierarchy = cv2.findContours(im_thresh, cv2.RETR_TREE ,cv2.CHAIN_APPROX_SIMPLE)
+cv2.drawContours(im, contours,-1,(0,255,0),1)
+endsnippet
+
+snippet cv2fps
+#import time
+start  = time.time()
+# process one frame
+end = time.time()
+fps = 1./(end - start)
+print("FPS: ", fps)
+endsnippet
+
+snippet tracker
+tracker = cv2.TrackerKCF_create()
+
+roi = cv2.selectROI("image", frame, True, False)
+tracker.init(frame, roi) # roi:[x1, y1, w, h]
+
+while True:
+	isfound, roi = tracker.update(frame)
+endsnippet
+
+snippet mp 
+import multiprocessing as mp
+def ${1:subprocess}_loop(in_q, out_q):
+    while True:
+        im = in_q.get()
+        # process
+        ret = im.shape
+        out_q.put(ret)
+
+# init process
+in_q = mp.Queue()
+out_q = mp.Queue()
+$1_process = mp.Process(target=$1_loop, args=(in_q, out_q))
+$1_process.start()
+
+# pass data in your program
+# send
+in_q.put(data)
+# get
+ret = []
+try:
+    ret = out_q.get(False)
+except Exception as e:
+    pass
+endsnippet
+
+snippet canny
+${1:img} = cv2.GaussianBlur($1,(3,3),0)  
+canny = cv2.Canny($1, 50, 150)  
+endsnippet
+
+####################################
+#
+# PIL 
+#
+####################################
+
+snippet topil
+#from PIL import Image
+#import cv2
+${1:im} = Image.fromarray(cv2.cvtColor($1,cv2.COLOR_BGR2RGB))
+endsnippet
+
+snippet tocv2
+#from PIL import Image
+#import numpy as np
+${1:im} = np.array($1)[:,:,::-1].copy()
+endsnippet
+
