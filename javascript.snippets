@@ -6,37 +6,49 @@ const args = require('yargs')
 	}).argv;
 endsnippet
 
+snippet ims
+import { $1 } from '$2';
+endsnippet
+
+snippet arr
+(${1}) => {}
+endsnippet
+
+# HTML
+
+snippet tag
+<$1 $2>
+  $3
+</$1>
+endsnippet
+snippet tagc "<xxx />"
+<$1 $2 />
+endsnippet
 snippet div
 <div>
   $1
 </div>
 endsnippet
-
 snippet hr
 <hr />
 $1
 endsnippet
-
+snippet br
+<br />
+$1
+endsnippet
 snippet h1
 <h1>$1</h1>
 endsnippet
-
 snippet h2
 <h2>$1</h2>
 endsnippet
-
 snippet h3
 <h3>$1</h3>
 endsnippet
-
 snippet button
 <button>$1</button>
 endsnippet
-
-snippet link
-<Link to="$1">$2</Link>
-endsnippet
-
 snippet ul
 <ul>
   $1
@@ -52,14 +64,43 @@ snippet nav
   $1
 </nav>
 endsnippet
-snippet tag
-<$1>
-  $2
-</$1>
-endsnippet
 snippet a
 <a>$1</a>
 endsnippet
 snippet p
 <p>$1</p>
+endsnippet
+snippet comment
+<!-- $1 -->
+endsnippet
+snippet comment
+{/*
+$1
+*/}
+endsnippet
+
+# React
+snippet link
+<Link to="$1">$2</Link>
+endsnippet
+snippet imr
+import React from 'react';
+
+endsnippet
+
+snippet rc "React Component" b
+import React, { Component} from 'react';
+import styles from './${2:$1}.css';
+
+class ${1:`!v expand('%:t:r')`} extends Component {
+	render() {
+		return (
+			<div className={styles.base}>
+				$3
+			</div>
+		);
+	}
+}
+
+export default $1;
 endsnippet

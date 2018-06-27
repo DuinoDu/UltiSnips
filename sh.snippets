@@ -41,3 +41,10 @@ endsnippet
 snippet checkcommand
 type ${1:command} > /dev/null 2>&1 || echo >&2 "$1 not exists"
 endsnippet
+
+snippet forarr
+arr=(1 2 3)
+for item in ${arr[@]};do
+	echo $item
+done
+endsnippet
