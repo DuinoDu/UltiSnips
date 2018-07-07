@@ -6,12 +6,18 @@ const args = require('yargs')
 	}).argv;
 endsnippet
 
-snippet ims
-import { $1 } from '$2';
+snippet imr
+import React from 'react';
+
+endsnippet
+
+snippet imma
+import $1 from '@material-ui/core/$1';
+
 endsnippet
 
 snippet arr
-(${1}) => {}
+(${1}) => {$2}
 endsnippet
 
 # HTML
@@ -83,10 +89,7 @@ endsnippet
 snippet link
 <Link to="$1">$2</Link>
 endsnippet
-snippet imr
-import React from 'react';
 
-endsnippet
 
 snippet rc "React Component" b
 import React, { Component} from 'react';
