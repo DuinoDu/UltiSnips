@@ -24,6 +24,12 @@ import os
 os.path.basename(os.path.abspath(__file__))
 endsnippet
 
+snippet readdir
+for root, dirs, files in os.walk("${1:root}"):
+	for name in files:
+		print(os.path.join(root, name))
+endsnippet
+
 snippet readfile
 $1 = [x.strip() for x in open(${2:filename}, 'r')]
 endsnippet

@@ -54,6 +54,10 @@ snippet addarg
 parser.add_argument('--${1:name}', default=${2}, type=${3:str}, help='${4:description}')
 endsnippet
 
+snippet addact
+parser.add_argument('--${1:name}', dest='$1', action='store_${2:true}', help='${3:description}')
+endsnippet
+
 snippet initcfg
 from easydict import EasyDict as edict
 import os

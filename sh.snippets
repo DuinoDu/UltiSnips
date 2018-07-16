@@ -29,7 +29,7 @@ exec 2>&1
 endsnippet
 
 
-snippet checkcommand
+snippet iscmd 
 if hash ${1:command} 2>/dev/null;then
     echo "Find $1 : "`which $1`
 else
@@ -38,11 +38,11 @@ else
 fi
 endsnippet
 
-snippet checkcommand
+snippet iscmd 
 type ${1:command} > /dev/null 2>&1 || echo >&2 "$1 not exists"
 endsnippet
 
-snippet forarr
+snippet foreach
 arr=(1 2 3)
 for item in ${arr[@]};do
 	echo $item
