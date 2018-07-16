@@ -19,6 +19,11 @@ import shutil
 shutil.copytree(${1:src_dir}, ${2:dst_dir}, False)
 endsnippet
 
+snippet curdir
+import os
+os.path.basename(os.path.abspath(__file__))
+endsnippet
+
 snippet readfile
 $1 = [x.strip() for x in open(${2:filename}, 'r')]
 endsnippet
@@ -310,14 +315,39 @@ self.assertTrue(${1:bool})
 endsnippet
 
 snippet timer
-#import utils
-timer = utils.Timer()
-timer.start()
-for i in range(1):
-    # fun1
-    timer.tictoc('${1:name}')
-    # fun2
-    timer.tictoc('${2:name}')
-timer.end()
-timer.log(show=True)
+import time
+tick_ms = int(round(time.time() * 1000))
+endsnippet
+
+snippet sdoc "doc for sphinx"
+"""${1:What does it do?}
+
+Parameters
+----------
+${2:param} : ${3:type}
+	${4: comment}
+Returns
+-------
+${5:type}
+    ${6:comment}
+"""
+endsnippet
+
+snippet docarg "add comment for one arg"
+${1:param} : ${2:type}
+	${3:comment}
+endsnippet
+
+snippet docex "add example in comment"
+Examples
+--------
+>>> ${1:input}
+endsnippet
+
+snippet futs
+from __future__ import absolute_import
+from __future__ import division
+from __future__ import print_function
+from __future__ import unicode_literals
+
 endsnippet
