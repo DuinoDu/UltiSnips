@@ -31,7 +31,7 @@ for root, dirs, files in os.walk("${1:root}"):
 endsnippet
 
 snippet readfile
-$1 = [x.strip() for x in open(${2:filename}, 'r')]
+$1 = [x.strip() for x in open(${2:filename}, 'r').readlines()]
 endsnippet
 
 snippet join
@@ -46,6 +46,23 @@ endsnippet
 snippet load
 with open('${1:file}', 'r') as fid:
 	${2:var} = pickle.load(fid)
+endsnippet
+
+snippet slice
+def chunks(l, n):
+	for i in range(0, len(l), n):
+		yield l[i:i + n]
+${2:small_list} = chunks(${1:big_list}, ${3:num})
+endsnippet
+
+snippet osversion
+from sys import platform
+if platform == "linux" or platform == "linux2":
+	# linux
+elif platform == "darwin":
+	# OS X
+elif platform == "win32":
+	# Windows...
 endsnippet
 
 snippet getimg
