@@ -48,3 +48,12 @@ for item in ${arr[@]};do
 	echo $item
 done
 endsnippet
+
+snippet ask
+read -p "${1:question}? [y/n]" answer
+if [[ $answer = "y"   ]]; then
+	${2:do something}
+else
+	exit
+fi
+endsnippet

@@ -24,10 +24,10 @@ import os
 os.path.basename(os.path.abspath(__file__))
 endsnippet
 
-snippet readdir
-for root, dirs, files in os.walk("${1:root}"):
-	for name in files:
-		print(os.path.join(root, name))
+snippet fordir
+${1:items} = []
+for path, dirs, files in os.walk(${2:root}, followlinks=True):
+¦   $1 += [os.path.join(path, x) for x in files if x.endswith('.${3:json}')]
 endsnippet
 
 snippet readfile
