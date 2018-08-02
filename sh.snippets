@@ -61,3 +61,27 @@ endsnippet
 snippet sed
 sed -i -e 's/${1:old}/${2:new}/g' ${3:file}
 endsnippet
+
+snippet tool
+function usage() {
+    echo "usage:"
+    echo "`!p snip.rv=fn` ${2:[-a]}"
+}
+
+while getopts "a:h:" arg
+do
+    case $arg in 
+        a)
+            a_value=${OPTARG}
+            ;;
+        h)
+            usage
+            exit
+            ;;
+        ?)
+            usage
+            exit 1
+            ;;
+    esac
+done
+endsnippet
