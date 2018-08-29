@@ -1,0 +1,54 @@
+snippet fun
+function $1($2) {
+    $3
+}
+endsnippet
+
+snippet prop "int, string, url, var(list and object)"
+property ${1:type} ${2:name}: $3
+endsnippet
+
+
+snippet window
+import QtQuick 2.5
+import QtQuick.Controls 1.4
+import QtQuick.Layouts 1.2
+ 
+ApplicationWindow {
+    visible: true
+    width: 640
+    height: 480
+    title: qsTr("${1:window_name}")
+    color: "whitesmoke"
+
+    Text { text: "Hello, qml" }
+}
+endsnippet
+
+
+snippet mouse
+MouseArea {
+    id: ${1:mousearea}
+    anchors.fill: parent
+    onClicked: { console.log("hello") }
+}
+endsnippet
+
+snippet input
+TextInput {
+    id: ${1:textinput}
+    text: "hello"
+}
+endsnippet
+
+snippet cc "Component.onCompleted:"
+Component.onCompleted: {
+	
+}
+endsnippet
+
+### anchor
+
+snippet center
+anchors.centerIn: parent
+endsnippet
