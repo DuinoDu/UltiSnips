@@ -85,3 +85,15 @@ do
     esac
 done
 endsnippet
+
+snippet setarg
+function set_${1:arg_name}() {
+    sed -e "s/config.network.$1 = .*/config.network.$1 = \$1/g" \
+        -i \$2
+}
+endsnippet
+
+snippet table
+# expID  |  flops/M  |  AP/% | info
+# 1      |           |       | xx 
+endsnippet
