@@ -191,6 +191,19 @@ if __name__ == "__main__":
 	main(args)
 endsnippet
 
+snippet tool2
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
+from __future__ import print_function
+import sys
+
+if len(sys.argv) < 2:
+    print("Usage: jsonloader [json] [ipy, option]")
+	    sys.exit(0)
+
+endsnippet
+
 snippet ask
 import six
 if six.PY3:
