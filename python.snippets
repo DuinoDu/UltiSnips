@@ -39,12 +39,12 @@ os.path.join($1)
 endsnippet
 
 snippet dump
-with open('${2:file}', 'w') as fid:
+with open(${2:file}, 'w') as fid:
 	pickle.dump(${1:var}, fid)
 endsnippet
 
 snippet load
-with open('${1:file}', 'r') as fid:
+with open(${1:file}, 'r') as fid:
 	${2:var} = pickle.load(fid)
 endsnippet
 
@@ -63,6 +63,14 @@ elif platform == "darwin":
 	# OS X
 elif platform == "win32":
 	# Windows...
+endsnippet
+
+snippet pyversion
+import sys
+if sys.version_info[0] == ${1:2}
+	pass
+else:
+	pass
 endsnippet
 
 snippet getimg
@@ -115,12 +123,11 @@ else:
 	pass
 endsnippet
 
-snippet pyversion
-import sys
-if sys.version_info[0] == ${1:2}
-	pass
-else:
-	pass
+snippet forind
+for ind, ${2:item} in enumerate(${1:obj}):
+	if ind % 1000 == 0:
+		print('%d / %d' % (ind, len($2)))
+	$3
 endsnippet
 
 
@@ -417,4 +424,3 @@ snippet slot
 def ${1:func_name}(self, arg1, arg2):
 	# pass
 endsnippet
-
