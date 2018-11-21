@@ -135,7 +135,13 @@ import cPickle as pickle
 
 print('loading %s' % ${1:args.roidb})
 with open($1, 'r') as fid:
-	roidb = pickle.load($1)
+	roidb = pickle.load(fid)
+endsnippet
+
+snippet saveroidb
+print('Saved in %s' % ${1:args.output})
+with open($1, 'w') as fid:
+	pickle.dump(${2:new_roidb}, fid)
 endsnippet
 
 
@@ -192,16 +198,16 @@ from __future__ import print_function
 import argparse
 import os
 
-def $2(args):
-	${3:pass}
 
 def main(args):
-    $2(args)
+	if args.output is None:
+		args.output = '${3:output}'
+
 
 if __name__ == "__main__":
 	parser = argparse.ArgumentParser(description='${1:description of this script}')
-	# addarg here
-	
+	parser.add_argument('--${2:input}', default=None, type=str, help='$2', required=True)
+	parser.add_argument('--output', default=None, type=str, help='output')
 	args = parser.parse_args()
 	main(args)
 endsnippet
@@ -401,34 +407,4 @@ from __future__ import division
 from __future__ import print_function
 from __future__ import unicode_literals
 
-endsnippet
-
-snippet pyqtplugin
-from PyQt5.QtCore import pyqtSignal, pyqtSlot, QObject
-
-class ${1:PluginName}(QObject):
-    def __init__(self):
-        QObject.__init__(self)
-
-    sumResult = pyqtSignal(int, arguments=['sum'])
-
-    @pyqtSlot(int, int)
-    def sum(self, arg1, arg2):
-        self.sumResult.emit(arg1+arg2)
-
-# add to main
-$2 = $1()
-engine.rootContext().setContextProperty("$2", $2)
-endsnippet
-
-snippet signal
-${1:signal_name} = pyqtSignal(${2:type}, arguments=['${3:value_name}'])
-endsnippet
-snippet emit
-self.${2:signal}.emit(${3:value})
-endsnippet
-snippet slot
-@pyqtSlot(int, int)
-def ${1:func_name}(self, arg1, arg2):
-	# pass
 endsnippet

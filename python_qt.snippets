@@ -1,0 +1,29 @@
+snippet pyqtplugin
+from PyQt5.QtCore import pyqtSignal, pyqtSlot, QObject
+
+class ${1:PluginName}(QObject):
+    def __init__(self):
+        QObject.__init__(self)
+
+    sumResult = pyqtSignal(int, arguments=['sum'])
+
+    @pyqtSlot(int, int)
+    def sum(self, arg1, arg2):
+        self.sumResult.emit(arg1+arg2)
+
+# add to main
+$2 = $1()
+engine.rootContext().setContextProperty("$2", $2)
+endsnippet
+
+snippet signal
+${1:signal_name} = pyqtSignal(${2:type}, arguments=['${3:value_name}'])
+endsnippet
+snippet emit
+self.${2:signal}.emit(${3:value})
+endsnippet
+snippet slot
+@pyqtSlot(int, int)
+def ${1:func_name}(self, arg1, arg2):
+	# pass
+endsnippet
