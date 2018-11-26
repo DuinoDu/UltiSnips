@@ -85,3 +85,10 @@ do
     esac
 done
 endsnippet
+
+snippet pyversion
+py_ver=\`python -c 'import sys; print(sys.version_info[:][0])'\`
+if [[ $py_ver == '2' ]]; then
+    echo "current using python2"
+fi
+endsnippet
