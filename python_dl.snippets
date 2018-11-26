@@ -302,7 +302,6 @@ output_shape = net_symbol.infer_shape(data=data_shape)
 print('network output shape:', output_shape[1])
 endsnippet
 
-
 snippet symconv 
 ${3:output} = mx.symbol.Convolution(name='${1:name}', data=${2:input}, num_filter=${4:64}, pad=(${5:1}, $5), 
                                     kernel=(${6:3}, $6), stride=(${7:1}, $7), no_bias=${8:True})
@@ -330,6 +329,7 @@ endsnippet
 snippet mxviz
 mx.viz.plot_network(symbol=${1:symbol}, shape={'data':${2:(1,3,224,224)}}, title='symbol', save_format='jpg').render()
 endsnippet
+
 
 snippet mx_dataset
 import numpy as np
@@ -396,6 +396,35 @@ class ${1:CustomLoader}(mx.io.DataIter):
             raise StopIteration
 endsnippet
 
+
+snippet readrec
+imgrec = mx.recordio.MXIndexedRecordIO(imgidx_path, imgrec_path, 'r')
+_, img = mx.recordio.unpack_img(imgrec[roi_rec['imgrec_id']].read_idx(roi_rec['imgrec_idx']), cv2.IMREAD_COLOR)
+endsnippet
+
+
+####################################
+#
+# mxnet, quantization
+#
+####################################
+snippet qinput
+#from mxnet.plugin import alphacnn as alpha
+#from mxnet.plugin import quantization as qnn
+data = alpha.QuantiInput(data=data, name="quantiinput0", fixed_output_shift=7) 
+endsnippet
+snippet qconv
+from common.symbols_qnn.sym_qnn_resnet import qnn_conv
+$4 = qnn_conv(data=$1, num_filter=$2, 
+              kernel=(3, 3), stride=(2, 2), pad=(1, 1), name="$3",
+			  disable_bn=False,
+			  ${5:elementwise_input=True, edata=unit_up8},
+              use_activation=False, 
+			  disable_output_quantization=False)
+endsnippet
+snippet qupsample
+$2 = mx.symbol.AlphaUpscale($1)
+endsnippet
 
 ####################################
 #

@@ -39,12 +39,12 @@ os.path.join($1)
 endsnippet
 
 snippet dump
-with open('${2:file}', 'w') as fid:
+with open(${2:file}, 'w') as fid:
 	pickle.dump(${1:var}, fid)
 endsnippet
 
 snippet load
-with open('${1:file}', 'r') as fid:
+with open(${1:file}, 'r') as fid:
 	${2:var} = pickle.load(fid)
 endsnippet
 
@@ -63,6 +63,14 @@ elif platform == "darwin":
 	# OS X
 elif platform == "win32":
 	# Windows...
+endsnippet
+
+snippet pyversion
+import sys
+if sys.version_info[0] == ${1:2}
+	pass
+else:
+	pass
 endsnippet
 
 snippet getimg
@@ -121,6 +129,26 @@ if sys.version_info[0] == ${1:2}:
 	pass
 else:
 	pass
+=======
+snippet forind
+for ind, ${2:item} in enumerate(${1:obj}):
+	if ind % 1000 == 0:
+		print('%d / %d' % (ind, len($1)))
+	$3
+endsnippet
+
+snippet loadroidb
+import cPickle as pickle
+
+print('loading %s' % ${1:args.roidb})
+with open($1, 'r') as fid:
+	roidb = pickle.load(fid)
+endsnippet
+
+snippet saveroidb
+print('Saved in %s' % ${1:args.output})
+with open($1, 'w') as fid:
+	pickle.dump(${2:new_roidb}, fid)
 endsnippet
 
 
@@ -177,18 +205,31 @@ from __future__ import print_function
 import argparse
 import os
 
-def $2(args):
-	${3:pass}
 
 def main(args):
-    $2(args)
+	if args.output is None:
+		args.output = '${3:output}'
+
 
 if __name__ == "__main__":
 	parser = argparse.ArgumentParser(description='${1:description of this script}')
-	# addarg here
-	
+	parser.add_argument('--${2:input}', default=None, type=str, help='$2', required=True)
+	parser.add_argument('--output', default=None, type=str, help='output')
 	args = parser.parse_args()
 	main(args)
+endsnippet
+
+snippet tool2
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
+from __future__ import print_function
+import sys
+
+if len(sys.argv) < 2:
+    print("Usage: jsonloader [json] [ipy, option]")
+	    sys.exit(0)
+
 endsnippet
 
 snippet ask

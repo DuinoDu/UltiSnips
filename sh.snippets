@@ -90,5 +90,20 @@ snippet pyversion
 py_ver=\`python -c 'import sys; print(sys.version_info[:][0])'\`
 if [[ $py_ver == '2' ]]; then
     echo "current using python2"
+=======
+snippet ismac
+if [ `uname -s` = 'Darwin' ]; then
+    echo 'mac'
+	$1
+fi
+endsnippet
+
+snippet timestamp
+date +%Y%m%d_%H%M%S
+endsnippet
+
+snippet ifeq
+if [ "$1"x = "$2"x ];then
+	$3
 fi
 endsnippet
