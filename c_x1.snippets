@@ -8,3 +8,97 @@ $2 = ($1 *)malloc(sizeof($1));
 assert($2 != NULL);
 memset(($1 *)$2, 0, sizeof($1));
 endsnippet
+
+snippet incx1
+#include <nuttx/mem_manager/bpu_malloc.h>
+#include <nuttx/mem_manager/mem_manager.h>
+#include <nuttx/vision/detection.h>
+#include <vision/model/cnn_result_postprocess.h>
+#include <vision/model/x1_binut.h>
+#include <vision/modules/bif_module.h>
+#include <vision/modules/cnn_module.h>
+#include <vision/modules/det_module.h>
+#include "hbdk/hbrt_run_model.h"
+#include "hobot_c/hobot_c.h"
+endsnippet
+
+snippet fcinit
+#define DYNAMIC_ALLOC
+#define SLOT_NUM 8
+#define FULLCNN_INT_NUM 3
+#define FULLCNN_OUTPUT_SIZE 0x200000
+#define FULLCNN_PARSE_SIZE 0x100000
+#define FULLCNN_FCQ_SIZE 0x20000
+
+// put below to xx_module_new function
+// #ifdef DYNAMIC_ALLOC
+// memblock_create(FULLCNN_OUTPUT_SIZE, SLOT_NUM * 2);
+// memblock_create(FULLCNN_PARSE_SIZE, SLOT_NUM * 2);
+// memblock_create(FULLCNN_FCQ_SIZE, SLOT_NUM * 2);
+// #endif
+endsnippet
+
+snippet fcalloc
+#ifdef DYNAMIC_ALLOC
+${1:cnn_message}->cnn_output_base = mem_malloc(FULLCNN_OUTPUT_SIZE);
+#if __i386__
+$1->parse_base = bpu_malloc(FULLCNN_PARSE_SIZE);
+$1->cnn_config.fcq_base = bpu_malloc(FULLCNN_FCQ_SIZE);
+#else
+$1->parse_base = mem_malloc(FULLCNN_PARSE_SIZE);
+$1->cnn_config.fcq_base = mem_malloc(FULLCNN_FCQ_SIZE);
+#endif
+assert($1->cnn_output_base != NULL);
+assert($1->parse_base != NULL);
+assert($1->cnn_config.fcq_base);
+#else
+#endif
+endsnippet
+
+snippet fcinput
+uint32_t int_num = FULLCNN_INT_NUM;
+const uint32_t y_height = 1080;
+const uint32_t y_width = 1920;
+const uint32_t y_stride = 1920;
+const uint32_t uv_height = 540;
+const uint32_t uv_width = 960;
+const uint32_t uv_stride = 960;
+const uint32_t roi_x1 = ${1:800};
+const uint32_t roi_y1 = ${2:380};
+const uint32_t roi_x2 = ${3:1120};
+const uint32_t roi_y2 = ${4:700};
+endsnippet
+
+snippet fcslot
+slot_info = (${1:lenet_slot_info_t} *)malloc(sizeof($1));
+assert(slot_info);
+
+struct vp_buffer_s *vpb = det_message->vpb;
+slot_info->input_y_ptr = vpb->frame_info.det_base + lenet_module_data->det_cfg->pym_layer[0].offset;
+slot_info->input_uv_ptr = vpb->frame_info.det_base;
+slot_info->slot_id = lenet_module_data->slot_id;
+endsnippet
+
+snippet fcfun
+ret = cnn_generateFunccallsForResizerInput("lenet",
+                                           int_num,
+                                           slot_info->input_y_ptr,
+                                           y_height,
+                                           y_width,
+                                           y_stride,
+                                           slot_info->input_uv_ptr,
+                                           uv_height,
+                                           uv_width,
+                                           uv_stride,
+                                           roi_x1,
+                                           roi_y1,
+                                           roi_x2,
+                                           roi_y2,
+                                           cnn_message->cnn_output_base,
+                                           FULLCNN_OUTPUT_SIZE,
+                                           cnn_message->cnn_config.fcq_base,
+                                           FULLCNN_FCQ_SIZE);
+cnn_message->cnn_config.fc_cnt = ret;
+cnn_message->irq_num = int_num;
+cnn_message->reserved = (uint32_t)slot_info;
+endsnippet
