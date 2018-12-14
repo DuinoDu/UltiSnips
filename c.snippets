@@ -1,0 +1,10 @@
+snippet getmoduledata
+${1:module_name}_data_t *$1_data = ($1_data_t *)module_get_data($1);
+endsnippet
+
+snippet initvar
+${1:type} ${2:name} = NULL;
+$2 = ($1 *)malloc(sizeof($1));
+assert($2 != NULL);
+memset(($1 *)$2, 0, sizeof($1));
+endsnippet
