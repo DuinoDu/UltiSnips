@@ -3,55 +3,27 @@ ${1:module_name}_data_t *$1_data = ($1_data_t *)module_get_data($1);
 endsnippet
 
 snippet initvar
-${1:type} ${2:name} = NULL;
-$2 = ($1 *)malloc(sizeof($1));
+${1:type} *${2:name} = ($1 *)malloc(sizeof($1));
 assert($2 != NULL);
 memset(($1 *)$2, 0, sizeof($1));
 endsnippet
 
-snippet incx1
-#include <nuttx/mem_manager/bpu_malloc.h>
-#include <nuttx/mem_manager/mem_manager.h>
-#include <nuttx/vision/detection.h>
-#include <vision/model/cnn_result_postprocess.h>
-#include <vision/model/x1_binut.h>
-#include <vision/modules/bif_module.h>
-#include <vision/modules/cnn_module.h>
-#include <vision/modules/det_module.h>
-#include "hbdk/hbrt_run_model.h"
-#include "hobot_c/hobot_c.h"
+snippet malloc
+($1 *)malloc(sizeof($1));
 endsnippet
 
-snippet fcinit
-#define DYNAMIC_ALLOC
-#define SLOT_NUM 8
-#define FULLCNN_INT_NUM 3
-#define FULLCNN_OUTPUT_SIZE 0x200000
-#define FULLCNN_PARSE_SIZE 0x100000
-#define FULLCNN_FCQ_SIZE 0x20000
-
-// put below to xx_module_new function
-// #ifdef DYNAMIC_ALLOC
-// memblock_create(FULLCNN_OUTPUT_SIZE, SLOT_NUM * 2);
-// memblock_create(FULLCNN_PARSE_SIZE, SLOT_NUM * 2);
-// memblock_create(FULLCNN_FCQ_SIZE, SLOT_NUM * 2);
-// #endif
-endsnippet
 
 snippet fcalloc
 #ifdef DYNAMIC_ALLOC
-${1:cnn_message}->cnn_output_base = mem_malloc(FULLCNN_OUTPUT_SIZE);
+
 #if __i386__
-$1->parse_base = bpu_malloc(FULLCNN_PARSE_SIZE);
-$1->cnn_config.fcq_base = bpu_malloc(FULLCNN_FCQ_SIZE);
+
 #else
-$1->parse_base = mem_malloc(FULLCNN_PARSE_SIZE);
-$1->cnn_config.fcq_base = mem_malloc(FULLCNN_FCQ_SIZE);
+
 #endif
-assert($1->cnn_output_base != NULL);
-assert($1->parse_base != NULL);
-assert($1->cnn_config.fcq_base);
+
 #else
+
 #endif
 endsnippet
 
