@@ -9,7 +9,7 @@ endsnippet
 
 snippet isdir
 if [ ! -d ${1} ];then
-	mkdir $1
+	mkdir -p $1
 fi
 endsnippet
 
@@ -59,7 +59,7 @@ fi
 endsnippet
 
 snippet sed
-sed -i -e 's/${1:old}/${2:new}/g' ${3:file}
+sed -i -e "s/${1:old}/${2:new}/g" ${3:file}
 endsnippet
 
 snippet tool
@@ -86,6 +86,11 @@ do
 done
 endsnippet
 
+snippet pyversion
+py_ver=\`python -c 'import sys; print(sys.version_info[:][0])'\`
+if [[ $py_ver == '2' ]]; then
+    echo "current using python2"
+=======
 snippet ismac
 if [ `uname -s` = 'Darwin' ]; then
     echo 'mac'

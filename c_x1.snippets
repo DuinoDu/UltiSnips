@@ -1,0 +1,76 @@
+snippet getmoduledata
+${1:module_name}_data_t *$1_data = ($1_data_t *)module_get_data($1);
+endsnippet
+
+snippet initvar
+${1:type} *${2:name} = ($1 *)malloc(sizeof($1));
+assert($2 != NULL);
+memset(($1 *)$2, 0, sizeof($1));
+endsnippet
+
+snippet malloc
+($1 *)malloc(sizeof($1));
+endsnippet
+
+
+snippet fcalloc
+#ifdef DYNAMIC_ALLOC
+
+#if __i386__
+
+#else
+
+#endif
+
+#else
+
+#endif
+endsnippet
+
+snippet fcinput
+uint32_t int_num = FULLCNN_INT_NUM;
+const uint32_t y_height = 1080;
+const uint32_t y_width = 1920;
+const uint32_t y_stride = 1920;
+const uint32_t uv_height = 540;
+const uint32_t uv_width = 960;
+const uint32_t uv_stride = 960;
+const uint32_t roi_x1 = ${1:800};
+const uint32_t roi_y1 = ${2:380};
+const uint32_t roi_x2 = ${3:1120};
+const uint32_t roi_y2 = ${4:700};
+endsnippet
+
+snippet fcslot
+slot_info = (${1:lenet_slot_info_t} *)malloc(sizeof($1));
+assert(slot_info);
+
+struct vp_buffer_s *vpb = det_message->vpb;
+slot_info->input_y_ptr = vpb->frame_info.det_base + lenet_module_data->det_cfg->pym_layer[0].offset;
+slot_info->input_uv_ptr = vpb->frame_info.det_base;
+slot_info->slot_id = lenet_module_data->slot_id;
+endsnippet
+
+snippet fcfun
+ret = cnn_generateFunccallsForResizerInput("lenet",
+                                           int_num,
+                                           slot_info->input_y_ptr,
+                                           y_height,
+                                           y_width,
+                                           y_stride,
+                                           slot_info->input_uv_ptr,
+                                           uv_height,
+                                           uv_width,
+                                           uv_stride,
+                                           roi_x1,
+                                           roi_y1,
+                                           roi_x2,
+                                           roi_y2,
+                                           cnn_message->cnn_output_base,
+                                           FULLCNN_OUTPUT_SIZE,
+                                           cnn_message->cnn_config.fcq_base,
+                                           FULLCNN_FCQ_SIZE);
+cnn_message->cnn_config.fc_cnt = ret;
+cnn_message->irq_num = int_num;
+cnn_message->reserved = (uint32_t)slot_info;
+endsnippet
