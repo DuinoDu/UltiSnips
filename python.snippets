@@ -27,7 +27,7 @@ endsnippet
 snippet fordir
 ${1:items} = []
 for path, dirs, files in os.walk(${2:root}, followlinks=True):
-¦   $1 += [os.path.join(path, x) for x in files if x.endswith('.${3:json}')]
+	$1 += [os.path.join(path, x) for x in files if x.endswith('.${3:json}')]
 endsnippet
 
 snippet readfile
