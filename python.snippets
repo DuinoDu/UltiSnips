@@ -147,7 +147,7 @@ with open($1, 'r') as fid:
 endsnippet
 
 snippet saveroidb
-print('Saved in %s' % ${1:args.output})
+print('saved in %s' % ${1:args.output})
 with open($1, 'w') as fid:
 	pickle.dump(${2:new_roidb}, fid)
 endsnippet
@@ -202,6 +202,10 @@ snippet tool
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+"""
+${1:description of this script}
+"""
+
 from __future__ import print_function
 import argparse
 import os
@@ -213,7 +217,7 @@ def main(args):
 
 
 if __name__ == "__main__":
-	parser = argparse.ArgumentParser(description='${1:description of this script}')
+	parser = argparse.ArgumentParser(description=__doc__)
 	parser.add_argument('--${2:input}', default=None, type=str, help='$2', required=True)
 	parser.add_argument('--output', default=None, type=str, help='output')
 	args = parser.parse_args()
