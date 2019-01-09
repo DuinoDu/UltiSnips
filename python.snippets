@@ -144,12 +144,14 @@ import cPickle as pickle
 print('loading %s' % ${1:args.roidb})
 with open($1, 'r') as fid:
 	roidb = pickle.load(fid)
+
 endsnippet
 
 snippet saveroidb
 print('saved in %s' % ${1:args.output})
 with open($1, 'w') as fid:
 	pickle.dump(${2:new_roidb}, fid)
+
 endsnippet
 
 
@@ -419,4 +421,9 @@ from __future__ import division
 from __future__ import print_function
 from __future__ import unicode_literals
 
+endsnippet
+
+snippet shuffle
+import random
+random.shuffle(${1:list})
 endsnippet
