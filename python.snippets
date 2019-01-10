@@ -4,9 +4,30 @@
 #
 ####################################
 
+snippet join
+os.path.join($1)
+endsnippet
+
+snippet dirname
+os.path.dirname($1)
+endsnippet
+
+snippet abspath
+os.path.abspath($1)
+endsnippet
+
+snippet basename
+os.path.basename($1)
+endsnippet
+
 snippet isdir
 if not os.path.exists(${1:dirname}):
     os.makedirs($1)
+endsnippet
+
+snippet shuffle
+import random
+random.shuffle(${1:list})
 endsnippet
 
 snippet cp
@@ -34,9 +55,6 @@ snippet readfile
 $1 = [x.strip() for x in open(${2:filename}, 'r').readlines()]
 endsnippet
 
-snippet join
-os.path.join($1)
-endsnippet
 
 snippet dump
 with open(${2:file}, 'w') as fid:
@@ -421,9 +439,4 @@ from __future__ import division
 from __future__ import print_function
 from __future__ import unicode_literals
 
-endsnippet
-
-snippet shuffle
-import random
-random.shuffle(${1:list})
 endsnippet
