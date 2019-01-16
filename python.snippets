@@ -257,6 +257,8 @@ if len(sys.argv) < 2:
 
 endsnippet
 
+
+
 snippet ask
 import six
 if six.PY3:
@@ -345,6 +347,44 @@ def ask(question, answer=str_compat, default=None, l=None):
 # value = ask('question?', int, 0)
 # value = ask('question?', bool, default)
 endsnippet
+
+snippet roidbtool
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
+"""
+${1:doc}
+"""
+
+from __future__ import print_function
+import argparse
+import os
+import cPickle as pickle
+
+
+def main(args):
+    if args.output is None:
+        args.output = 'output'
+
+    print('loading %s' % args.roidb)
+    with open(args.roidb, 'r') as fid:
+        roidb = pickle.load(fid)
+
+    for ind, roi in enumerate(roidb):
+        if ind % 1000 == 0:
+            print('%d / %d' % (ind, len(roidb)))
+		${2:TODO}
+
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('--roidb', default=None, type=str, help='', required=True)
+    parser.add_argument('--imgdir', default=None, type=str, help='', required=True)
+    parser.add_argument('--output', default=None, type=str, help='output')
+    args = parser.parse_args()
+    main(args)
+endsnippet
+
 
 ####################################
 #
