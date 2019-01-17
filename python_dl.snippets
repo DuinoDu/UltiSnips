@@ -38,6 +38,19 @@ from PIL import Image
 Image.fromarray(${1:arr}).save(${2:filename})
 endsnippet
 
+####################################
+#
+# matplotlib
+#
+####################################
+snippet hist
+import matplotlib.pyplot as plt
+
+plt.hist(${1:data_list}, ${2:bins})
+plt.show()
+endsnippet
+
+
 
 ####################################
 #
