@@ -1,0 +1,30 @@
+snippet print
+fmt.Println($1)
+endsnippet
+
+snippet exit
+os.Exit(0)
+endsnippet
+
+snippet foreach
+${1:arr} := []${2:float64}{0,0}
+for _, item := range $1 {
+	${3:print(item)}
+}
+endsnippet
+
+snippet strformat
+${1:str} := fmt.Sprintf("%s", "hello")
+endsnippet
+
+snippet join
+path.Join($1, $2)
+endsnippet
+
+snippet parseuri
+${1:name} := r.URL.Query().Get("$1")
+if $1 == "" {
+    http.Error(w, "Get '$1' not specified in url.", 400)
+    return
+}
+endsnippet
