@@ -2,6 +2,10 @@ snippet print
 fmt.Println($1)
 endsnippet
 
+snippet strformat
+${1:str} := fmt.Sprintf("%s", "hello")
+endsnippet
+
 snippet exit
 os.Exit(0)
 endsnippet
@@ -13,18 +17,22 @@ for _, item := range $1 {
 }
 endsnippet
 
-snippet strformat
-${1:str} := fmt.Sprintf("%s", "hello")
-endsnippet
-
 snippet join
 path.Join($1, $2)
 endsnippet
 
-snippet parseuri
+snippet parseurl
 ${1:name} := r.URL.Query().Get("$1")
 if $1 == "" {
     http.Error(w, "Get '$1' not specified in url.", 400)
     return
 }
+endsnippet
+
+snippet wprint
+fmt.Fprintf(w, "${1:hello}\n")
+endsnippet
+
+snippet werror
+http.Error(w, "${1:error}", 400)
 endsnippet
