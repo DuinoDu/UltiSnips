@@ -6,6 +6,13 @@ if [ ! -n "\$1" ];then
 fi
 endsnippet
 
+snippet isvars
+if [ ! -n "\$1" ] || [ ! -n "\$2" ];then
+    echo "${1:Message to print.}"
+    exit 1
+fi
+endsnippet
+
 
 snippet isdir
 if [ ! -d ${1} ];then
