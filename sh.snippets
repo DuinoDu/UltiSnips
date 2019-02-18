@@ -123,6 +123,10 @@ fi
 endsnippet
 
 snippet ip
-ip=`ip addr | grep 'state UP' -A2 | tail -n1 | awk '{print $2}' | cut -f1  -d'/'`
+ip=\`ip addr | grep 'state UP' -A2 | tail -n1 | awk '{print \$2}' | cut -f1  -d'/'\`
 endsnippet
 
+snippet cur
+_curfile=$(realpath \$0)
+${1:cur}=$(dirname $_curfile)
+endsnippet
