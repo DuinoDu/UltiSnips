@@ -95,23 +95,6 @@ snippet getimg
 ${1:imgfiles} = sorted([os.path.join(${2:root}, x) for x in sorted(os.listdir($2)) if x.endswith('.jpg')])
 endsnippet
 
-snippet readxml
-#import xml.etree.ElementTree as ET
-tree = ET.parse(xmlfile)
-width = int(tree.find('size').find('width').text)
-height = int(tree.find('size').find('height').text)
-objs = tree.findall('object')
-for index, obj in enumerate(objs):
-    name = obj.find('name').text.lower()
-    bbox = obj.find('bndbox')
-    x1 = int(bbox.find('xmin').text) - 1
-    y1 = int(bbox.find('ymin').text) - 1
-    x2 = int(bbox.find('xmax').text) - 1
-    elif args.cuda:
-        net = net.cuda()
-    y2 = int(bbox.find('ymax').text) - 1
-endsnippet
-
 snippet sh
 try:
     import commands
@@ -172,6 +155,9 @@ with open($1, 'w') as fid:
 
 endsnippet
 
+snippet all
+__all__ = ['$1']
+endsnippet
 
 ####################################
 #
