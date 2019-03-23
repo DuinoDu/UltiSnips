@@ -51,7 +51,6 @@ plt.show()
 endsnippet
 
 
-
 ####################################
 #
 # common
@@ -301,6 +300,7 @@ snippet trelu
 nn.ReLU()
 endsnippet
 
+
 ####################################
 #
 # mxnet
@@ -338,106 +338,15 @@ snippet tosym
 sym = ${1:net}(mx.sym.var('data'))
 endsnippet
 
-
 snippet mxviz
 mx.viz.plot_network(symbol=${1:symbol}, shape={'data':${2:(1,3,224,224)}}, title='symbol', save_format='jpg').render()
 endsnippet
-
-
-snippet mx_dataset
-import numpy as np
-import mxnet as mx
-
-class ${1:CustomLoader}(mx.io.DataIter):
-    def __init__(self, batch_size=1, ctx=None):
-        super($1, self).__init__()
-
-        # custom params
-        self.batch_size = batch_size
-        self.ctx = ctx
-
-        # size and index
-        self.size = ${2:dataset size}
-        self.index = np.arange(self.size)
-
-        # data and label
-		# change to your dataset
-        self.data_name = ['data']
-        self.label_name = ['label', 'bbox_target', 'bbox_weight']
-
-        # status variable
-        self.cur = 0
-        self.batch = None
-        self.data = None
-        self.label = None
-
-        # get first batch to fill in provide_data and provide_label
-        self.reset()
-        self.get_batch()
-
-    def reset(self):
-        self.cur = 0
-
-    def get_batch(self):
-        # put data and label to self.data and self.label
-        # [B, C, H, W]
-        self.data = [mx.nd.zeros((1, 3, 256, 256)) for key in self.data_name]
-        self.label = [mx.nd.zeros((10,10)) for key in self.label_name]
-
-    @property
-    def provide_data(self):
-        return [(k, v.shape) for k, v in zip(self.data_name, self.data)]
-
-    @property
-    def provide_label(self):
-        return [(k, v.shape) for k, v in zip(self.label_name, self.label)]
-
-    def next(self):
-        pad = self.cur + self.batch_size - self.size \
-                if (self.cur + self.batch_size > self.size) else 0
-        if self.cur + self.batch_size <= self.size:
-            self.get_batch()
-            self.cur += self.batch_size
-            index = self.cur / self.batch_size
-            return mx.io.DataBatch(data=self.data,
-                                   label=self.label,
-                                   pad=pad,
-                                   index=index,
-                                   provide_data=self.provide_data,
-                                   provide_label=self.provide_label)
-        else:
-            raise StopIteration
-endsnippet
-
 
 snippet readrec
 imgrec = mx.recordio.MXIndexedRecordIO(imgidx_path, imgrec_path, 'r')
 _, img = mx.recordio.unpack_img(imgrec[roi_rec['imgrec_id']].read_idx(roi_rec['imgrec_idx']), cv2.IMREAD_COLOR)
 endsnippet
 
-
-####################################
-#
-# mxnet, quantization
-#
-####################################
-snippet qinput
-#from mxnet.plugin import alphacnn as alpha
-#from mxnet.plugin import quantization as qnn
-data = alpha.QuantiInput(data=data, name="quantiinput0", fixed_output_shift=7) 
-endsnippet
-snippet qconv
-from common.symbols_qnn.sym_qnn_resnet import qnn_conv
-$4 = qnn_conv(data=$1, num_filter=$2, 
-              kernel=(3, 3), stride=(2, 2), pad=(1, 1), name="$3",
-			  disable_bn=False,
-			  ${5:elementwise_input=True, edata=unit_up8},
-              use_activation=False, 
-			  disable_output_quantization=False)
-endsnippet
-snippet qupsample
-$2 = mx.symbol.AlphaUpscale($1)
-endsnippet
 
 ####################################
 #
@@ -494,91 +403,54 @@ snippet grelu
 nn.Activation('${1:relu}')
 endsnippet
 
+####################################
+#
+# gluon_horizon
+#
+####################################
+snippet checkmodel
+from gluon_horizon.hbcc.utils import get_symbol
+from gluon_horizon.hbcc.model_checker import model_checker
+with QuantizationBlockScope(mode=QuantizationModeEnum.kIntInference, mirroring_level=0):
+	net = ${1:Net()} 
+symbol = get_symbol(net, num_inputs=1)
+flag = model_checker(symbol, march='x2', shape=(1, ${2:28}, ${3:28}, 3), strip_quanti_op_postfix=True, remove_tmp_files=True)
+if flag == 0:
+	print('[+]Success to pass model checker![+]')
+else:
+	print('[-]Failed to pass model checker![-]')
+
+endsnippet
+
 
 ####################################
 #
-# tensorflow 
+# hobotpy
 #
 ####################################
-snippet place
-tf.placeholder(tf.float32, shape=[${1}], name='${2}')
-endsnippet
-snippet var
-tf.Variable(${1})
-endsnippet
-snippet sess
-sess = tf.InteractiveSession()
-endsnippet
-snippet tfadd
-tf.add(${1})
-endsnippet
-snippet tfmul
-tf.matmul(${1})
-endsnippet
-snippet tfrand
-tf.random_normal([${1:h}, ${2:w}, ${3:in}, ${4:out}])
-endsnippet
-snippet tfmean
-tf.reduce_mean(${1})
-endsnippet
-snippet tfcast
-tf.cast(${1}, ${2:tf.float32})
-endsnippet
-snippet tfequal
-tf.equal(${1})
-endsnippet
-snippet tfargmax
-tf.argmax(${1}, ${2:dimension})
-endsnippet
-snippet tfopti
-tf.train.GradientDescentOptimizer(learning_rate=${1:learning_rate}).minimize(${2:cost_op})
-endsnippet
-snippet tfopti
-tf.train.AdamOptimizer(learning_rate=${1:learning_rate}).minimize(${2:cost_op})
-endsnippet
-snippet tfrun
-feed_dict = {x:${1}}
-sess.run(${1:graph_name}, feed_dict=feed_dict)
-endsnippet
-snippet setgpu
-import os
-os.environ['CUDA_VISIBLE_DIVICES'] = "${1:gpuID}"
-config = tf.ConfigProto(device_count={'GPU':$1})
-config.gpu_options.per_process_gpu_memory_fraction = ${2:0.5}
-#with tf.Session(config=config) as sess:
-endsnippet
-snippet closelog
-import os
-os.environ['TF_CPP_MIN_LOG_LEVEL'] = '1' 
-endsnippet
-snippet testnet
-sess = tf.InteractiveSession(config=config)
-x = tf.placeholder(tf.float32, shape=[${1:input shape}], name='x')
-net = model(x)
-tl.layers.initialize_global_variables(sess)
+snippet transform
+class ${1:Name}TrainTransform(object):
+	"""Default training transform for $1.
+	Parameters
+	----------
+	"""
+	def __init__(self, **kwargs):
+		pass
 
-net.print_params()
-net.print_layers()
+	def __call__(self, src, label, img_path):
+		pass
+		return img, label, img_path
 
-feed_dict = {x: np.random.rand($1)}
-out = sess.run(net.outputs, feed_dict=feed_dict)
-print(out.shape)
-endsnippet
 
-####################################
-#
-# tensorlayer
-#
-####################################
-snippet tlinput
-$3 = tl.layers.InputLayer(${1:x}, name='${2:input}')
-endsnippet
-snippet tlconv
-$4 = tl.layers.Conv2d(${1:x}, ${2:out_channels}, (3,3), act=tf.nn.relu, name='${3:conv}')
-endsnippet
-snippet tlpool
-$3 = tl.layers.MaxPool2d(${1:x}, (2,2), name='${2:pool}')
-endsnippet
-snippet tlinit
-tl.layers.initialize_global_variables(sess)
+class $1ValTransform(object):
+	"""Default valid transform for $1.
+	Parameters
+	----------
+	"""
+	def __init__(self, **kwargs):
+		pass
+
+	def __call__(self, src, label, img_path):
+		pass
+	return img, label, img_path
 endsnippet
