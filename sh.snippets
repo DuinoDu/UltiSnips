@@ -130,3 +130,11 @@ snippet cur
 _curfile=$(realpath \$0)
 ${1:cur}=$(dirname $_curfile)
 endsnippet
+
+snippet parsejson
+CONF=${1:json}
+function parse_args() {
+	export PYTHONIOENCODING=utf8
+	logs=\`cat $CONF | python -c "import sys, json; print json.load(sys.stdin)['visloss']['logs']" | tr -d "[],u'"\`
+}
+endsnippet
