@@ -44,7 +44,7 @@ imgrec = mx.recordio.MXIndexedRecordIO(imgidx_path, imgrec_path, 'r')
 _, img = mx.recordio.unpack_img(imgrec[roi_rec['imgrec_id']].read_idx(roi_rec['imgrec_idx']), cv2.IMREAD_COLOR)
 endsnippet
 
-snippet profiler
+snippet profile
 from mxnet import profiler
 profiler.set_config(profile_all=True, aggregate_stats=False, filename='profile_output.json')
 profiler.set_state('run')
@@ -52,6 +52,21 @@ profiler.set_state('run')
 #TODO
 
 profiler.set_state('stop')
+
+endsnippet
+
+snippet lp
+import line_profiler
+profiler = line_profiler.LineProfiler(${1:function})
+profiler.enable()
+
+# TODO, $1
+
+profiler.disable()
+fid = open('lp_output.txt.py', 'w')
+profiler.print_stats(fid)
+fid.close()
+
 endsnippet
 
 
