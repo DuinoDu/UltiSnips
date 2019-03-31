@@ -469,3 +469,19 @@ from __future__ import print_function
 from __future__ import unicode_literals
 
 endsnippet
+
+snippet decorator
+def ${1:name}(${2:args1}):
+	def _decorator(func):
+		@functools.warps(func)
+		def __decorator(*args, **kwargs):
+			# defore, TODO
+
+			res = func(args, kwargs)
+
+			# after, TODO
+
+			return res
+		return __decorator
+	return _decorator
+endsnippet
