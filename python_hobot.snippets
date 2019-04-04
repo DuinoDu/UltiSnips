@@ -168,6 +168,46 @@ endsnippet
 # hobotpy
 #
 ####################################
+snippet ltpl 
+# -*- coding: utf-8 -*-
+"""label-target-predict convert utility in pose task"""
+
+from __future__ import division
+import numpy as np
+import copy
+
+
+__all__ = ['Encoder', 'Decoder']
+
+
+class Encoder(object):
+    """Label to target transform for ${1:name} task
+
+    """
+    def __init__(self):
+		pass
+
+    def __call__(self):
+        """convert label to target
+
+        """
+		pass
+
+
+class Decoder(object):
+    """Target to predict transform for $1 task
+
+    """
+    def __init__(self):
+        pass
+
+    def __call__(self):
+        """convert target to predict
+
+        """
+        pass
+endsnippet
+
 snippet transform
 class ${1:Name}TrainTransform(object):
 	"""Default training transform for $1.
@@ -193,20 +233,4 @@ class $1ValTransform(object):
 	def __call__(self, src, label, img_path):
 		pass
 	return img, label, img_path
-endsnippet
-
-snippet label2target
-class Label2Target(object):
-	"""${1:docstring}
-
-	Parameters
-	----------
-
-	"""
-	def __init__(self):
-		pass
-
-	def __call__(self):
-		pass
-	
 endsnippet

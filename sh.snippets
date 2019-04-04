@@ -37,12 +37,11 @@ endsnippet
 
 
 snippet iscmd 
-if hash ${1:command} 2>/dev/null;then
-    echo "Find $1 : "`which $1`
-else
+if ! hash ${1:command} 2>/dev/null;then
     echo '$1 not found, please install $1 first.'
     exit
 fi
+echo "Find $1 : "`which $1`
 endsnippet
 
 snippet iscmd 
