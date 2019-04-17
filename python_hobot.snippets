@@ -234,3 +234,38 @@ class $1ValTransform(object):
 		pass
 	return img, label, img_path
 endsnippet
+
+
+
+#####################
+#
+# lmkstxt, roidb, ...
+#
+#####################
+snippet parselmkstxt
+def process_txt(txt, num_lmks=68):
+	with open(txt, 'r') as f:
+		lines = f.readlines()
+	all_dict = dict()
+	name_list = []
+	# each line: img_path, rects(4), lmks2(10), lmks2_attr(5), lmks1(10)
+	for line in lines:
+		data = line.strip().split(' ')
+		img_path = data[0]
+		rects = np.array([float(x) for x in data[1:5]])
+		lmks2 = np.array([float(x) for x in data[(5 + num_lmks * 0):(5 + num_lmks * 2)]])
+		lmks2_attr = np.array([float(x) for x in data[(5 + num_lmks * 2):(5 + num_lmks * 3)]])
+		if len(data) > 20:
+			lmks1 = np.array([float(x) for x in data[(5 + num_lmks * 3):(5 + num_lmks * 5)]])
+		else:
+			lmks1 = np.zeros(2 * num_lmks)
+		img_name = img_path.split('/')[-1]
+		cnt += 1
+		all_dict[img_name] = {  'img_path': img_path,
+								'rects': rects,
+								'lmks2': lmks2,
+								'lmks2_attr': lmks2_attr,
+								'lmks1': lmks1}
+		name_list.append(img_name)
+	return all_dict, name_list
+endsnippet
