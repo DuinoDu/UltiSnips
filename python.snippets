@@ -83,14 +83,6 @@ elif platform == "win32":
 	# Windows...
 endsnippet
 
-snippet pyversion
-import sys
-if sys.version_info[0] == ${1:2}
-	pass
-else:
-	pass
-endsnippet
-
 snippet getimg
 ${1:imgfiles} = sorted([os.path.join(${2:root}, x) for x in sorted(os.listdir($2)) if x.endswith('.jpg')])
 endsnippet

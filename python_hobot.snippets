@@ -219,7 +219,7 @@ class ${1:Name}TrainTransform(object):
 
 	def __call__(self, src, label, img_path):
 		pass
-		return img, label, img_path
+		return src, label, img_path
 
 
 class $1ValTransform(object):
@@ -232,7 +232,7 @@ class $1ValTransform(object):
 
 	def __call__(self, src, label, img_path):
 		pass
-	return img, label, img_path
+		return src, label, img_path
 endsnippet
 
 
@@ -268,4 +268,11 @@ def process_txt(txt, num_lmks=68):
 								'lmks1': lmks1}
 		name_list.append(img_name)
 	return all_dict, name_list
+endsnippet
+
+snippet pickle
+try:
+    import cPickle as pickle
+except ImportError as e:
+    import pickle
 endsnippet
