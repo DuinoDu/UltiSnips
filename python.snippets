@@ -66,6 +66,22 @@ with open(${1:file}, 'r') as fid:
 	${2:var} = pickle.load(fid)
 endsnippet
 
+snippet py3pickle
+import sys
+if sys.version_info[0] == 2:
+	import cPickle as pickle
+else:
+	import pickle
+
+#try:
+#    roidb = pickle.load(open(args.roidb, 'rb'))
+#except Exception as e:
+#    roidb = pickle.load(open(args.roidb, 'rb'), encoding='iso-8859-1')
+
+#pickle.dump(open(args.output, 'wb'))
+
+endsnippet
+
 snippet slice
 def chunks(l, n):
 	for i in range(0, len(l), n):
@@ -118,7 +134,7 @@ endsnippet
 
 snippet pyversion
 import sys
-if sys.version_info[0] == ${1:2}:
+if sys.version_info[0] == 2:
 	pass
 else:
 	pass
@@ -132,17 +148,15 @@ for ind, ${2:item} in enumerate(${1:obj}):
 endsnippet
 
 snippet loadroidb
-import cPickle as pickle
-
 print('loading %s' % ${1:args.roidb})
-with open($1, 'r') as fid:
+with open($1, 'rb') as fid:
 	roidb = pickle.load(fid)
 
 endsnippet
 
 snippet saveroidb
 print('saved in %s' % ${1:args.output})
-with open($1, 'w') as fid:
+with open($1, 'wb') as fid:
 	pickle.dump(${2:new_roidb}, fid)
 
 endsnippet
