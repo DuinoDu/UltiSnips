@@ -137,3 +137,38 @@ function parse_args() {
 	logs=\`cat $CONF | python -c "import sys, json; print json.load(sys.stdin)['visloss']['logs']" | tr -d "[],u'"\`
 }
 endsnippet
+
+snippet initargs
+POSITIONAL=()
+while [[ $# -gt 0  ]]
+do
+key="$1"
+case $key in
+    -y|--yaml)
+    yaml="$2"
+    shift # past argument
+    shift # past value
+    ;;
+    -h|--help)
+    usage
+    shift
+    shift
+    ;;
+    *)    # unknown option
+    usage
+    shift
+    POSITIONAL+=("$1") # save it in an array for later
+    shift # past argument
+    ;;
+esac
+done
+set -- "${POSITIONAL[@]}" # restore positional parameters
+endsnippet
+
+snippet addarg
+-$1|--$2)
+$2="\$2"
+shift # past argument
+shift # past value
+;;
+endsnippet
