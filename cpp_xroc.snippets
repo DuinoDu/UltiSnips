@@ -1,0 +1,60 @@
+# readfile
+snippet arg
+std::string ${1:name} = argv[${2:1}];
+endsnippet
+
+snippet initxroc
+HobotXRoc::XRocSDK *flow = HobotXRoc::XRocSDK::CreateSDK();
+flow->SetConfig("config_file", ${1:config_file_path});
+flow->Init();
+endsnippet
+
+snippet setcallback
+Callback callback;
+flow->SetCallback(std::bind(&Callback::OnCallback, &callback, std::placeholders::_1));
+endsnippet
+
+snippet imread
+std::string ${1:image_name} = "${2:image_file_path}";
+std::cout << $1 << std::endl;
+cv::Mat cvimage = cv::imread($1);
+cv::cvtColor(cvimage, cvimage, CV_BGR2RGB);
+endsnippet
+
+snippet xrocinput
+HobotXRoc::InputDataPtr inputdata(new HobotXRoc::InputData());
+endsnippet
+
+snippet xrocimage
+int size = ${1:cv2image} * $1 * $1();
+HobotXRoc::ImageFrame *input_image = new HobotXRoc::ImageFrame(size, $1.data);
+input_image->pixel_format_ = HobotXRoc::PixelFormat::RAW_RGB;
+input_image->width_ = $1.cols;
+input_image->channel_id_ = 0;
+input_image->stride_ = $1.cols;
+input_image->height_ = $1.rows;
+input_image->name_ = "${2:name}";
+endsnippet
+
+snippet xrocbbox
+auto ${1:bbox} = std::make_shared<HobotXRoc::BBox>();
+$1->values_ = {${2:x1}, ${3:y1}, ${4:x2}, ${5:y2}};
+endsnippet
+
+snippet xrocvector
+auto boxes = std::make_shared<HobotXRoc::BaseDataVector>();
+// boxes->datas_.push_back(rect);
+boxes->name_ = "${1:name}";
+endsnippet
+
+snippet image2input
+${2:inputdata}->datas_.push_back(HobotXRoc::BaseDataPtr(${1:input_image}));
+endsnippet
+
+snippet vector2input
+${2:inputdata}->datas_.push_back(${1:input_vector});
+endsnippet
+
+snippet forward
+HobotXRoc::OutputDataPtr ${3:out} = ${1:flow}->SyncPredict(${2:inputdata});
+endsnippet
