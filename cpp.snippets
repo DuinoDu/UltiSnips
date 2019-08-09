@@ -1,7 +1,3 @@
-# List:
-# readfile, incv, fps, ip, camera, mouse 
-#
-
 # readfile
 snippet readfile
 //#include <fstream>
@@ -80,8 +76,8 @@ snippet camera
 int camera_id = 0;
 VideoCapture capture(camera_id);
 if(!capture.isOpened()){
-    cout << "Can not open camera" << endl;
-    return -1;
+  cout << "Can not open camera" << endl;
+  return -1;
 }
 double rate= capture.get(CV_CAP_PROP_FPS);
 Mat frame; 
@@ -89,16 +85,16 @@ namedWindow("Camera");
 
 int delay= 1000/rate;
 while (true) {
-    if (!capture.read(frame))
-        break;
+  if (!capture.read(frame))
+    break;
 
-    // TODO
-	${1}
+  // TODO
+  ${1}
 
-    imshow("Camera",frame);
-    char key = cv::waitKey(delay);
-    if (key == 'q')
-        break;
+  imshow("Camera",frame);
+  char key = cv::waitKey(delay);
+  if (key == 'q')
+    break;
 }
 capture.release();
 destroyAllWindows();
@@ -128,7 +124,21 @@ void MouseCallback(int mouseEvent,int x,int y,int flags,void* params)
 // setMouseCallback("window", MouseCallback, &params);
 endsnippet
 
-snippet incc
-#include <iostream>
-using namespace std;
+
+snippet imread
+auto img = cv::imread(${1:imgfile});
+endsnippet
+
+snippet torgb
+cv::cvtColor(${1:img}, $1, cv::CV_BGR2RGB);
+endsnippet
+
+snippet esc
+cv::namedWindow("Display Image", cv::WINDOW_AUTOSIZE);
+cv::imshow("Display Image", ${1:img});
+cv::waitKey(0);
+endsnippet
+
+snippet imwrite
+cv::imwrite(${2:filename}, ${1:img});
 endsnippet

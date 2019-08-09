@@ -1,6 +1,15 @@
 # readfile
-snippet arg
-std::string ${1:name} = argv[${2:1}];
+
+snippet initarg
+if (argc != ${1:2}){
+  std::cerr << "Usage: " << argv[0]
+            << "${2: arg1}"
+            << std::endl;
+}
+endsnippet
+
+snippet addarg
+const std::string ${1:name} = argv[${2:1}];
 endsnippet
 
 snippet initxroc
