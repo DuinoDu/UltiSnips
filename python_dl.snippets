@@ -240,24 +240,16 @@ class ${1:name}(object):
 endsnippet
 
 snippet module
-from detect import Detect
 class ${1:name}(nn.Module):
 
-    def __init__(self, cfg, phase):
+    def __init__(self):
         super($1, self).__init__()
-		self.cfg = cfg
-		self.phase = phase
-		if self.phase == 'test':
-			self.detect = Detect()
         # TODO: init module
+		pass
 
     def forward(self, x):
         # TODO: build module
-
-		if self.phase == 'train':
-			return x
-		else self.phase == 'test':
-			return self.detect(x)
+		pass
 endsnippet
 
 snippet testmodule
