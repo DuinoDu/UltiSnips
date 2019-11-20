@@ -507,3 +507,12 @@ endsnippet
 snippet addall
 __all__ = ['$1']
 endsnippet
+
+snippet dumpdata
+import pickle
+_data = dict()
+_data['${1:boxes}'] = $1
+with open('${2:save_file.pkl}', 'wb') as fid:
+	pickle.dump(_data, fid)
+import sys; sys.exit()
+endsnippet
