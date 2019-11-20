@@ -172,3 +172,16 @@ shift # past argument
 shift # past value
 ;;
 endsnippet
+
+
+snippet forgrep
+OLDIFS=$IFS
+IFS="
+"
+result=$(grep -o -e "^def.*(" $1 | cut -d '(' -f1)
+IFS=$OLDIFS
+
+for item in ${result[@]};do
+	echo $item
+	done')'")")
+endsnippet

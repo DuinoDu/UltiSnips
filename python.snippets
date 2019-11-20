@@ -496,3 +496,14 @@ def ${1:name}(decorated_=None, ${3:args1}):
 	else:
 		return _decorator
 endsnippet
+
+snippet loadyaml
+import yaml
+from easydict import EasyDict as edict
+
+cfg = edict(yaml.load(open(${1:cfgfile}, 'r'), Loader=yaml.SafeLoader))
+endsnippet
+
+snippet addall
+__all__ = ['$1']
+endsnippet

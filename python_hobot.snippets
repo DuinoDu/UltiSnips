@@ -235,6 +235,41 @@ class $1ValTransform(object):
 		return src, label, img_path
 endsnippet
 
+snippet loss
+"""det loss."""
+# coding: utf-8
+from __future__ import absolute_import
+from __future__ import division
+from __future__ import print_function
+from __future__ import unicode_literals
+
+from mxnet.gluon.loss import Loss, _reshape_like, _apply_weighting
+
+
+class ${1:Name}Loss(Loss):
+    r"""Calculates $1 loss.
+
+    refer to paper <paper>
+
+    """
+    def __init__(self, 
+				 weight=None, batch_axis=0,
+                 size_average=True, **kwargs):
+        super($1Loss, self).__init__(weight, batch_axis, **kwargs)
+        self._size_average = size_average
+        self._eps = 1e-6
+
+    def hybrid_forward(self, F, pred, label, sample_weight=None):
+        """Loss forward"""
+		pass
+
+        loss = _apply_weighting(F, loss, self._weight, sample_weight)
+        if self._size_average:
+            return F.mean(loss, axis=self._batch_axis, exclude=True)
+        else:
+            return F.sum(loss, axis=self._batch_axis, exclude=True)
+
+endsnippet
 
 
 #####################
@@ -242,37 +277,13 @@ endsnippet
 # lmkstxt, roidb, ...
 #
 #####################
-snippet parselmkstxt
-def process_txt(txt, num_lmks=68):
-	with open(txt, 'r') as f:
-		lines = f.readlines()
-	all_dict = dict()
-	name_list = []
-	# each line: img_path, rects(4), lmks2(10), lmks2_attr(5), lmks1(10)
-	for line in lines:
-		data = line.strip().split(' ')
-		img_path = data[0]
-		rects = np.array([float(x) for x in data[1:5]])
-		lmks2 = np.array([float(x) for x in data[(5 + num_lmks * 0):(5 + num_lmks * 2)]])
-		lmks2_attr = np.array([float(x) for x in data[(5 + num_lmks * 2):(5 + num_lmks * 3)]])
-		if len(data) > 20:
-			lmks1 = np.array([float(x) for x in data[(5 + num_lmks * 3):(5 + num_lmks * 5)]])
-		else:
-			lmks1 = np.zeros(2 * num_lmks)
-		img_name = img_path.split('/')[-1]
-		cnt += 1
-		all_dict[img_name] = {  'img_path': img_path,
-								'rects': rects,
-								'lmks2': lmks2,
-								'lmks2_attr': lmks2_attr,
-								'lmks1': lmks1}
-		name_list.append(img_name)
-	return all_dict, name_list
-endsnippet
-
 snippet pickle
 try:
     import cPickle as pickle
 except ImportError as e:
     import pickle
+endsnippet
+
+snippet addp2
+self.${1:name} = getattr(${2:params}, '$1', ${3:False})
 endsnippet

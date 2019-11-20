@@ -1,0 +1,19 @@
+snippet hist
+import numpy as np
+import matplotlib.pyplot as plt
+print(np.histogram(${1:data}))
+plt.hist($1, np.arange(0, 1.1, 0.01))
+plt.show()
+endsnippet
+
+snippet heatmap
+import cv2
+from visperson import target
+img = target.heatmap(${1:heatmap[B,C,H,W]}, image=None, merge=False)
+endsnippet
+
+snippet draw
+import cv2
+from visperson import draw
+${3:img} = draw.skeleton(${1:img}, ${2:keypoints})
+endsnippet
