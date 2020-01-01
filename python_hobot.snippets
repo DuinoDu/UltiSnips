@@ -272,6 +272,13 @@ class ${1:Name}Loss(Loss):
 endsnippet
 
 
+snippet export
+self.test_net.export("${1:model}", epoch=0)
+print("dump to $1")
+import sys; sys.exit()
+endsnippet
+
+
 #####################
 #
 # lmkstxt, roidb, ...
