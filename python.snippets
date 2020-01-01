@@ -288,6 +288,13 @@ if __name__ == "__main__":
 	main(args)
 endsnippet
 
+snippet node
+class ${1:Name}Node(Node):
+    def process(self, ${2:arg}):
+        # TODO
+		self.push(${3:value})
+endsnippet
+
 
 snippet ask
 import six
