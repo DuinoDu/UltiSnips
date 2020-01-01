@@ -294,3 +294,7 @@ endsnippet
 snippet addp2
 self.${1:name} = getattr(${2:params}, '$1', ${3:False})
 endsnippet
+
+snippet getroidbdict
+${2:roidb_dict} = {os.path.basename(roi['image']):roi for roi in ${1:roidb}}
+endsnippet

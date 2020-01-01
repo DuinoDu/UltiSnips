@@ -125,3 +125,11 @@ snippet tocv2
 ${1:im} = np.array($1)[:,:,::-1].copy()
 endsnippet
 
+snippet video
+import cv2
+fourcc = cv2.VideoWriter_fourcc(*'MP4V')
+fps = ${2:25.0}
+out = cv2.VideoWriter(${1:savefile}, fourcc, fps, (${3:640, 480}))
+out.write(frame)
+out.release()
+endsnippet
