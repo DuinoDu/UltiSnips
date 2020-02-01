@@ -290,9 +290,46 @@ endsnippet
 
 snippet node
 class ${1:Name}Node(Node):
-    def process(self, ${2:arg}):
+    """
+    ${2:docstring}
+    """
+    def begin(self):
+		# set params
+		# Example:
+		# self.value = getattr(self, 'value', False)
+        pass
+
+    def process(self, ${3:item}):
         # TODO
-		self.push(${3:value})
+		self.push(${4:value})
+endsnippet
+
+snippet roidbnode
+class ${1:Name}Node(Node):
+    """
+    ${2:docstring}
+    """
+    def begin(self):
+		# set params
+		# Example:
+		# self.value = getattr(self, 'value', False)
+        pass
+
+    def process_one(self, roi):
+		# TODO: process roi
+		pass
+
+    def process(self, roidb):
+        if isinstance(roidb, list):
+            t = tqdm.tqdm(total=len(roidb), desc=self.name)
+            for roi in roidb:
+                t.update()
+                self.process_one(roi)
+        elif isinstance(roidb, dict):
+            self.process_one(roidb)
+        else:
+            raise ValueError
+        self.push(roidb)
 endsnippet
 
 
