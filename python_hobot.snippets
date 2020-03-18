@@ -170,41 +170,56 @@ endsnippet
 ####################################
 snippet ltpl 
 # -*- coding: utf-8 -*-
-"""label-target-predict convert utility in pose task"""
+"""${2:description}"""
 
 from __future__ import division
 import numpy as np
-import copy
 
 
-__all__ = ['Encoder', 'Decoder']
+__all__ = ['$1Encoder', '$1Decoder']
 
 
-class Encoder(object):
-    """Label to target transform for ${1:name} task
+class ${1:Name}Encoder(object):
+    """Label to target transform.
+
+	Input
+	-----
+
+	Output
+	------
+
+	Example
+	-------
+	>>> encoder = $1Encoder()
+	>>> target, weight = encoder(label)
 
     """
     def __init__(self):
 		pass
 
     def __call__(self):
-        """convert label to target
-
-        """
 		pass
 
 
-class Decoder(object):
-    """Target to predict transform for $1 task
+class $1Decoder(object):
+    """Target to predict transform.
+
+	Input
+	-----
+
+	Output
+	------
+
+	Example
+	-------
+	>>> decoder = $1Decoder()
+	>>> pred_label = decoder(pred_target)
 
     """
     def __init__(self):
         pass
 
     def __call__(self):
-        """convert target to predict
-
-        """
         pass
 endsnippet
 
