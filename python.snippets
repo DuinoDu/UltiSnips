@@ -561,7 +561,7 @@ def ${1:name}(decorated_=None, ${3:args1}):
 	"""${2:docstring}
 	"""
 	def _decorator(func):
-		@functools.warps(func)
+		@functools.wraps(func)
 		def __decorator(*args, **kwargs):
 			# defore, TODO
 
