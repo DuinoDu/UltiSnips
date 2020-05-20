@@ -202,8 +202,7 @@ endsnippet
 
 snippet progress
 import tqdm
-t = tqdm.tqdm()
-t.total = ${1:length}
+t = tqdm.tqdm(total=len(${1:list}))
 for i in range($1):
     t.update()
 endsnippet
