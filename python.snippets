@@ -595,3 +595,9 @@ with open('${2:save_file.pkl}', 'wb') as fid:
 	pickle.dump(_data, fid)
 import sys; sys.exit()
 endsnippet
+
+snippet doctest
+if __name__ == "__main__":
+	import doctest
+	doctest.testmod()
+endsnippet
