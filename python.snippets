@@ -202,8 +202,7 @@ endsnippet
 
 snippet progress
 import tqdm
-t = tqdm.tqdm()
-t.total = ${1:length}
+t = tqdm.tqdm(total=len(${1:list}))
 for i in range($1):
     t.update()
 endsnippet
@@ -265,8 +264,10 @@ workflow for ${1:task}
 from __future__ import print_function
 import argparse
 import os
-from consecution import Pipeline, Node
-from dataperson.node import ReadNode, WriteNode
+import tqdm
+from person_workflow import Pipeline, Node
+from person_workflow.io import ReadNode, WriteNode
+from person_workflow.process import RemoveKeyNode, SummaryNode
 
 
 def main(args):
@@ -275,7 +276,7 @@ def main(args):
 
 	pipe = Pipeline(
 	    ReadNode('read', field='boxes5_skeleton51')
-		WriteNode('write', savename=args.output)
+		| WriteNode('write', savename=args.output)
 	)
 	pipe.consume([args.input])
 
@@ -286,6 +287,50 @@ if __name__ == "__main__":
 	parser.add_argument('--output', default=None, type=str, help='output')
 	args = parser.parse_args()
 	main(args)
+endsnippet
+
+snippet node
+class ${1:Name}Node(Node):
+    """
+    ${2:docstring}
+    """
+    def begin(self):
+		# set params
+		# Example:
+		# self.value = getattr(self, 'value', False)
+        pass
+
+    def process(self, ${3:item}):
+        # TODO
+		self.push(${4:value})
+endsnippet
+
+snippet roidbnode
+class ${1:Name}Node(Node):
+    """
+    ${2:docstring}
+    """
+    def begin(self):
+		# set params
+		# Example:
+		# self.value = getattr(self, 'value', False)
+        pass
+
+    def process_one(self, roi):
+		# TODO: process roi
+		pass
+
+    def process(self, roidb):
+        if isinstance(roidb, list):
+            t = tqdm.tqdm(total=len(roidb), desc=self.name)
+            for roi in roidb:
+                t.update()
+                self.process_one(roi)
+        elif isinstance(roidb, dict):
+            self.process_one(roidb)
+        else:
+            raise ValueError
+        self.push(roidb)
 endsnippet
 
 
@@ -551,4 +596,10 @@ _data['${1:boxes}'] = $1
 with open('${2:save_file.pkl}', 'wb') as fid:
 	pickle.dump(_data, fid)
 import sys; sys.exit()
+endsnippet
+
+snippet doctest
+if __name__ == "__main__":
+	import doctest
+	doctest.testmod()
 endsnippet

@@ -170,70 +170,59 @@ endsnippet
 ####################################
 snippet ltpl 
 # -*- coding: utf-8 -*-
-"""label-target-predict convert utility in pose task"""
+"""${2:description}"""
 
 from __future__ import division
 import numpy as np
-import copy
 
 
-__all__ = ['Encoder', 'Decoder']
+__all__ = ['$1Encoder', '$1Decoder']
 
 
-class Encoder(object):
-    """Label to target transform for ${1:name} task
+class ${1:Name}Encoder(object):
+    """Label to target transform.
+
+	Input
+	-----
+
+	Output
+	------
+
+	Example
+	-------
+	>>> encoder = $1Encoder()
+	>>> target, weight = encoder(label)
 
     """
     def __init__(self):
 		pass
 
     def __call__(self):
-        """convert label to target
-
-        """
 		pass
 
 
-class Decoder(object):
-    """Target to predict transform for $1 task
+class $1Decoder(object):
+    """Target to predict transform.
+
+	Input
+	-----
+
+	Output
+	------
+
+	Example
+	-------
+	>>> decoder = $1Decoder()
+	>>> pred_label = decoder(pred_target)
 
     """
     def __init__(self):
         pass
 
     def __call__(self):
-        """convert target to predict
-
-        """
         pass
 endsnippet
 
-snippet transform
-class ${1:Name}TrainTransform(object):
-	"""Default training transform for $1.
-	Parameters
-	----------
-	"""
-	def __init__(self, **kwargs):
-		pass
-
-	def __call__(self, src, label, img_path):
-		pass
-		return src, label, img_path
-
-
-class $1ValTransform(object):
-	"""Default valid transform for $1.
-	Parameters
-	----------
-	"""
-	def __init__(self, **kwargs):
-		pass
-
-	def __call__(self, src, label, img_path):
-		pass
-		return src, label, img_path
-endsnippet
 
 snippet loss
 """det loss."""
@@ -281,7 +270,7 @@ endsnippet
 
 #####################
 #
-# lmkstxt, roidb, ...
+# roidb, ...
 #
 #####################
 snippet pickle
@@ -291,10 +280,30 @@ except ImportError as e:
     import pickle
 endsnippet
 
-snippet addp2
-self.${1:name} = getattr(${2:params}, '$1', ${3:False})
-endsnippet
 
-snippet getroidbdict
-${2:roidb_dict} = {os.path.basename(roi['image']):roi for roi in ${1:roidb}}
+########
+#
+# person
+#
+########
+snippet engine
+from easydict import EasyDict as edict
+from predperson import Engine
+cfg = edict()
+
+# --- 
+# cfg.engine = 'mxnet-gluon'
+# cfg.json = 'model-symbol.json'
+# cfg.params = 'model-0000.params'
+# --- 
+# cfg.engine = 'caffe'
+# cfg.prototxt = 'model.prototxt'
+# cfg.caffemodel = 'model.caffemodel'
+# --- 
+# cfg.engine = 'onnx-public'
+# cfg.onnxfile = 'model.onnx'
+
+cfg.gpus = '0'
+engine = Engine(cfg)
+output = engine(x)
 endsnippet
