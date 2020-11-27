@@ -509,6 +509,10 @@ snippet skip
 @unittest.skip("tested")
 endsnippet
 
+snippet skip
+@pytest.mark.skipif(${1:True}, reason="${2:skipped}")
+endsnippet
+
 snippet testeq
 self.assertEqual(${1:v1}, ${2:v2})
 endsnippet
