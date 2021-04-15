@@ -128,104 +128,6 @@ os.environ['CUDA_VISIBLE_DIVICES'] = str(args.gpuID)
 device = torch.device('cuda' if args.cuda else 'cpu')
 endsnippet
 
-snippet multigpu
-${1:net} = nn.DataParallel($1).cuda()
-endsnippet
-
-snippet torch_dataset
-class AnnotationTransform(object):
-    """
-    Load annotation from file to loss input
-    """
-    def __init__(self):
-        pass
-
-
-    def __call__(self, target):
-        res = []
-        return res 
-
-
-class ${1:Name}(data.Dataset):
-    """
-    TODO
-    """
-    def __init__(self, root, phase, transform=None, target_transform=AnnotationTransform(),
-                 dataset_name='$1'):
-        self.root = cfg.root
-        self.phase = phase
-        self.transform = transform
-        self.target_transform = target_transform
-        self.name = dataset_name
-        # TODO: set image and anno path
-        #self._annopath = os.path.join('%s', 'Annotations', '%s.xml')
-        #self._imgpath = os.path.join('%s', 'JPEGImages', '%s.jpg')
-        #self.ids = list()
-        #for (year, name) in image_sets:
-        #    rootpath = os.path.join(self.root, 'VOC' + year)
-        #    for line in open(os.path.join(rootpath, 'ImageSets', 'Main', name + '.txt')):
-        #        self.ids.append((rootpath, line.strip()))
-
-
-    def __len__(self):
-        return len(self.ids)
-
-
-    def __getitem__(self, index):
-        # TODO
-        return im, gt
-
-
-def custom_collate(batch):
-    """Custom collate fn for dealing with batches of images that have a different
-    number of associated object annotations (bounding boxes).
-
-    [TODO]: use default collate if not need.
-    """
-    imgs = []
-    targets = []
-    # TODO
-    return torch.stack(imgs, 0), targets
-
-
-def make_dataloader(cfg, root, phase, augment):
-    root = cfg.root
-    batch_size = cfg.batch_size
-    num_workers = cfg.num_workers
-    shuffle = cfg.shuffle if phase == 'train' else False
-    pin_memory = cfg.pin_memory
-
-    dataset = $1(root, image_sets, augment, AnnotationTransform())
-    return data.DataLoader(dataset, 
-                           batch_size, 
-                           num_workers=num_workers,
-                           shuffle=shuffle, 
-                           pin_memory=pin_memory,
-                           collate_fn=custom_collate)
-endsnippet
-
-snippet compose
-class ${1:name}Augmentation(object):
-	def __init__(self, ${3:args}):
-		self.transforms = [
-				# TODO: add more
-				ToTensor(),
-				]
-	def __call__(self, ${2:im}):
-		for t in self.transforms:
-			$2 = t($2)
-		return $2
-endsnippet
-
-snippet tran
-class ${1:name}(object):
-    def __init__(self, ${2:args}):
-		self.$2 = $2
-		pass
-    def __call__(self, im, ${3:args}):
-		pass
-endsnippet
-
 snippet module
 class ${1:name}(nn.Module):
 
@@ -274,14 +176,14 @@ def _load_weight(self, weight_file=None):
     print('Loading weight successfully!')
 endsnippet
 
-snippet tconv
+snippet conv
 nn.Conv2d(${1:in_channels}, ${2:out_channels}, kernel_size=${3:3}, padding=${4:1})
 endsnippet
 
-snippet tbn
+snippet bn
 nn.BatchNorm2d(${1::in_channels})
 endsnippet
 
-snippet trelu
+snippet relu
 nn.ReLU()
 endsnippet
