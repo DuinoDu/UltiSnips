@@ -213,7 +213,7 @@ endsnippet
 # framework
 #
 ####################################
-snippet tool
+snippet tool2
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
@@ -239,16 +239,26 @@ if __name__ == "__main__":
 	main(args)
 endsnippet
 
-snippet tool2
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
+snippet tool
+from typing import Optional
+import typer
 
-from __future__ import print_function
-import sys
 
-if len(sys.argv) < 2:
-    print("Usage: jsonloader [json] [ipy, option]")
-	    sys.exit(0)
+# @task(name="my-tool")
+def main(
+    ${2:args}: str,
+    output: Optional[str] = typer.Option(None, help="output name"),
+):
+    """${1:Tool description.}
+
+    """
+    ${3}
+
+    typer.echo(typer.style(f"hello, tool", fg=typer.colors.GREEN))
+
+
+if __name__ == "__main__":
+    typer.run(main)
 
 endsnippet
 
@@ -421,6 +431,11 @@ def ask(question, answer=str_compat, default=None, l=None):
 # value = ask('question?', str_compat, 'default')
 # value = ask('question?', int, 0)
 # value = ask('question?', bool, default)
+endsnippet
+
+snippet ask2
+from prompt_toolkit import prompt
+$2 = prompt($1)
 endsnippet
 
 snippet roidbtool
