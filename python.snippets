@@ -21,8 +21,7 @@ os.path.basename($1)
 endsnippet
 
 snippet isdir
-if not os.path.exists(${1:dirname}):
-    os.makedirs($1)
+os.makedirs($1, exist_ok=True)
 endsnippet
 
 snippet shuffle
@@ -624,9 +623,17 @@ if __name__ == "__main__":
 endsnippet
 
 snippet todo
-# TODO(`!v g:snips_author`): ${1:info} #
+# TODO(`!v g:snips_author`): ${1:info}
 endsnippet
 
 snippet pudb
 from pudb.forked import set_trace; set_trace()
+endsnippet
+
+snippet igt-file
+# mypy: ignore-errors
+endsnippet
+
+snippet igt-line
+# type: ignore
 endsnippet
