@@ -143,7 +143,54 @@ snippet imwrite
 cv::imwrite(${2:filename}, ${1:img});
 endsnippet
 
+<<<<<<< Updated upstream
 
 snippet cv2circle
 cv::circle(InputOutputArray img, Point center, int radius, const Scalar &color, int thickness=1);
+=======
+snippet getimg
+#include <filesystem>
+
+static bool endswith(const std::string& str, const std::string& suffix) {
+  return str.size() >= suffix.size() && 0 == str.compare(str.size()-suffix.size(), suffix.size(), suffix);
+}
+
+static bool startswith(const std::string& str, const std::string& prefix) {
+  return str.size() >= prefix.size() && 0 == str.compare(0, prefix.size(), prefix);
+}
+
+for (const auto & file : std::filesystem::directory_iterator(${1:root})) {
+  if (endswith(file.path().string(), ".png")) {
+    ${2:TODO}
+  }
+}
+endsnippet
+
+snippet printmap
+for(auto &pair : ${1:my_map}) {
+  std::cout << pair.first << ": " << pair.second << std::endl;
+}
+endsnippet
+
+snippet printvec
+for(auto &item :${1:my_vec}) {
+  std::cout << item << std::endl;
+}
+endsnippet
+
+snippet print
+std::cout << ${1} << std::endl;
+endsnippet
+
+snippet cvmat
+cv::Mat ${1:mat}(${2:height}, ${3:width}, ${4:CV_8UC3}, ${5:image_addr});
+endsnippet
+
+snippet timestring
+auto t = std::time(nullptr);
+auto tm = *std::localtime(&t);
+std::ostringstream oss;
+oss << std::put_time(&tm, "%d-%m-%Y_%H-%M-%S");
+std::string timestring = oss.str();
+>>>>>>> Stashed changes
 endsnippet
