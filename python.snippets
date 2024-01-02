@@ -213,29 +213,25 @@ endsnippet
 #
 ####################################
 snippet tool2
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
+from typing import Optional
+import typer
 
-"""
-${1:description of this script}
-"""
+from pdebug.otn import manager as otn_manager
 
-from __future__ import print_function
-import argparse
-import os
+@otn_manager.NODE.register(name="`!p snip.rv = snip.basename`")
+def main(
+    ${2:args}: str,
+    output: str = None,
+):
+    """${1:Tool description.}
 
-
-def main(args):
-	if args.output is None:
-		args.output = '${3:output}'
+    """
+    ${3}
+    typer.echo(typer.style(f"hello, tool", fg=typer.colors.GREEN))
 
 
 if __name__ == "__main__":
-	parser = argparse.ArgumentParser(description=__doc__)
-	parser.add_argument('--${2:input}', default=None, type=str, help='$2', required=True)
-	parser.add_argument('--output', default=None, type=str, help='output')
-	args = parser.parse_args()
-	main(args)
+    typer.run(main)
 endsnippet
 
 snippet tool
