@@ -1,0 +1,23 @@
+snippet tensor2mat
+endsnippet
+
+snippet tensor2vec
+#include "Tensor_Vec.h"
+auto ${2:vec} = std::dynamic_pointer_cast<Engine::Tensor_Vec<${3:float32}, ${4:10}>>(${1:tensor});
+endsnippet
+
+snippet tensor2placeholder
+#include "Tensor_PlaceHolder.h"
+auto ${2:placeholder} = std::dynamic_pointer_cast<Engine::Tensor_PlaceHolder>(${1:tensor});
+endsnippet
+
+snippet log
+#include "Logger.h"
+Utils::Log::Write(Utils::Log::Level::Info, "${1:message}");
+endsnippet
+
+snippet logg
+#include "Logger.h"
+#include "DebugFormatter.h"
+Utils::Log::Write(Utils::Log::Level::Info, Utils::formatMessage(" ", $1));
+endsnippet
