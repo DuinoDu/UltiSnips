@@ -16,8 +16,16 @@ snippet log
 Utils::Log::Write(Utils::Log::Level::Info, "${1:message}");
 endsnippet
 
-snippet logg
+snippet logf
 #include "Logger.h"
 #include "DebugFormatter.h"
 Utils::Log::Write(Utils::Log::Level::Info, Utils::formatMessage(" ", $1));
+endsnippet
+
+snippet xrlog
+Log::Write(Log::Level::Info, "${1:hello}");
+endsnippet
+
+snippet xrlogf
+Log::Write(Log::Level::Info, Fmt("${1:hello}, %s", ${2:world}));
 endsnippet
