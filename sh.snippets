@@ -1,4 +1,10 @@
-# readfile
+snippet isenv
+if [[ -z "$1" ]];then
+    echo "${1:env name} not defined"
+    exit 1
+fi
+endsnippet
+
 snippet isvar
 if [ ! -n "\$1" ];then
     echo "${1:Message to print.}"
@@ -13,28 +19,11 @@ if [ ! -n "\$1" ] || [ ! -n "\$2" ];then
 fi
 endsnippet
 
-
 snippet isdir
 if [ ! -d ${1} ];then
 	mkdir -p $1
 fi
 endsnippet
-
-
-snippet fordir
-for f in ${1:`ls *.zip`};do
-	${2:unzip $f}
-done
-endsnippet
-
-
-snippet log
-LOG_DIR=${1:.}
-LOG_File=${2:prefix}_\`date +%Y-%m-%d_%H:%M:%S\`.log
-exec > >(tee -i $LOG_DIR/$LOG_File)
-exec 2>&1
-endsnippet
-
 
 snippet iscmd 
 if ! hash ${1:command} 2>/dev/null;then
@@ -46,6 +35,46 @@ endsnippet
 
 snippet iscmd 
 type ${1:command} > /dev/null 2>&1 || echo >&2 "$1 not exists"
+endsnippet
+
+snippet ismac
+if [ `uname -s` = 'Darwin' ]; then
+    echo 'mac'
+	$1
+fi
+endsnippet
+
+snippet iseq
+if [ "$1"x = "$2"x ];then
+	$3
+fi
+endsnippet
+
+snippet isin
+if [[ ${1:father} == *"${2:son}"*  ]]; then
+	$3
+fi
+endsnippet
+
+snippet isinstall
+python3 -c "import $1" 2>/dev/null
+if [ $? -eq 0 ]; then
+	echo "$1 is already installed, skip"
+	return
+fi
+endsnippet
+
+snippet fordir
+for f in ${1:`ls *.zip`};do
+	${2:unzip $f}
+done
+endsnippet
+
+snippet log
+LOG_DIR=${1:.}
+LOG_File=${2:prefix}_\`date +%Y-%m-%d_%H:%M:%S\`.log
+exec > >(tee -i $LOG_DIR/$LOG_File)
+exec 2>&1
 endsnippet
 
 snippet foreach
@@ -98,27 +127,8 @@ if [[ $py_ver == '2' ]]; then
     echo "current using python2"
 endsnippet
 
-snippet ismac
-if [ `uname -s` = 'Darwin' ]; then
-    echo 'mac'
-	$1
-fi
-endsnippet
-
 snippet timestamp
 date +%Y%m%d_%H%M%S
-endsnippet
-
-snippet ifeq
-if [ "$1"x = "$2"x ];then
-	$3
-fi
-endsnippet
-
-snippet ifin
-if [[ ${1:father} == *"${2:son}"*  ]]; then
-	$3
-fi
 endsnippet
 
 snippet ip
