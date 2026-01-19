@@ -213,21 +213,71 @@ endsnippet
 #
 ####################################
 snippet tool2
-from typing import Optional
 import typer
+from pathlib import Path
+import sys
+import os
+import tqdm
+import numpy as np
+import cv2
 
 from pdebug.otn import manager as otn_manager
+from pdebug.utils.fileio import do_system
+from pdebug.piata import Input, Output
+from pdebug.visp import draw
+
 
 @otn_manager.NODE.register(name="`!p snip.rv = snip.basename`")
 def main(
-    ${2:args}: str,
-    output: str = None,
+    input_path: str = None,
+    output: str = "tmp_${2:output}",
+    vis_output: str = "tmp_$2_vis",
+    repo: str = None,
+    unittest: bool = False,
+    cache: bool = True,
+    topk: int = -1,
 ):
     """${1:Tool description.}
 
     """
-    ${3}
-    typer.echo(typer.style(f"hello, tool", fg=typer.colors.GREEN))
+    output = Path(output)
+    output.mkdir(exist_ok=True)
+    if vis_output:
+        vis_output = Path(vis_output)
+        vis_output.mkdir(exist_ok=True)
+        writer = Output(vis_output / "visualization.mp4", name="video_ffmpeg").get_writer()
+    repo = Path(repo).resolve()
+    sys.path.insert(0, str(repo))
+
+	input_path = Path(input_path)
+
+    if unittest:
+        import imageio.v3 as iio
+        url = "https://upload.wikimedia.org/wikipedia/en/7/7d/Lenna_%28test_image%29.png"
+        download_file(url, "/tmp/lenna.png")
+        input_files = ["/tmp/lenna.png"]
+	else:
+        input_path = Path(input_path)
+        input_files = Input(input_path, name="imgdir", topk=topk).get_reader().imgfiles
+	
+    reader = Input(input_path, name="imgdir", topk=topk).get_reader()
+    typer.echo(typer.style(f"loading {len(reader)} images", fg=typer.colors.GREEN))
+
+    t = tqdm.tqdm(total=len(reader))
+    for image in reader:
+        t.update()
+
+        savename = output / os.path.basename(imgfile)
+        if cache and savename.exists():
+            continue
+
+        # if vis_output:
+        #     writer.write_frame(vis_result)	
+
+    if vis_output:
+        writer.save()
+
+    typer.echo(typer.style(f"saved to {output}", fg=typer.colors.GREEN))
 
 
 if __name__ == "__main__":

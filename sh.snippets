@@ -38,9 +38,12 @@ type ${1:command} > /dev/null 2>&1 || echo >&2 "$1 not exists"
 endsnippet
 
 snippet ismac
-if [ `uname -s` = 'Darwin' ]; then
-    echo 'mac'
-	$1
+if [[ "$(uname)" == "Darwin"  ]];then
+    echo "I am mac"
+elif [[ "$(uname)" == "Linux" ]]; then
+    echo "I am linux"
+elif [[ "$(uname)" == *"_NT"* ]]; then
+    echo "I am windows"
 fi
 endsnippet
 
