@@ -195,3 +195,18 @@ for item in ${result[@]};do
 	echo $item
 	done')'")")
 endsnippet
+
+snippet task
+echo "
+# Goal（一句话）
+$1
+# Inputs（路径 / repo / 版本）
+
+# Non-goals（明确不做什么）
+
+# Steps（必须先给 plan）
+
+# Done（可自动验证）
+
+"
+endsnippet
