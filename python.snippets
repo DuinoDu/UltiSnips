@@ -54,7 +54,6 @@ snippet readfile
 $1 = [x.strip() for x in open(${2:filename}, 'r').readlines()]
 endsnippet
 
-
 snippet dump
 with open(${2:file}, 'w') as fid:
 	pickle.dump(${1:var}, fid)
